@@ -80,7 +80,20 @@ function resetDocs(docs, descriptions, docs_list_id = 'produts') {
 	$('#doc-list').empty();
 	$('#doc-list').hide();
 
-	console.log(docs);
+	if (docs_list_id === 'produts') {
+		// Filter docs with activity_description_index = 0
+		docs = docs.filter((doc) => doc.activity_description_index === 0);
+	}
+
+	if (docs_list_id === 'services') {
+		// Filter docs with activity_description_index = 1
+		docs = docs.filter((doc) => doc.activity_description_index === 1);
+	}
+
+	if (docs_list_id === 'others') {
+		// Remove docs with activity_description_index = 0 and 1
+		docs = docs.filter((doc) => doc.activity_description_index > 1);
+	}
 
 	if (docs.length <= 1) {
 		$('#doc-list').append(`<div class="doc-button disabled temp">Nenhum conteúdo cadastrado</div>`);
