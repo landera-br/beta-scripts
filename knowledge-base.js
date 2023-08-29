@@ -81,20 +81,20 @@ function resetDocs(docs, descriptions, docs_list_id = 'produts') {
 	$('#doc-list').empty();
 	$('#doc-list').hide();
 
+	// Filter products (activity_description_index = 0)
 	if (docs_list_id === 'produts') {
-		// Filter docs with activity_description_index = 0
 		docs = docs.filter((doc) => doc.activity_description_index === 0);
 		empty_text = 'Nenhum produto cadastrado';
 	}
 
+	// Filter services (activity_description_index = 1)
 	if (docs_list_id === 'services') {
-		// Filter docs with activity_description_index = 1
 		docs = docs.filter((doc) => doc.activity_description_index === 1);
 		empty_text = 'Nenhum serviço cadastrado';
 	}
 
+	// Filter others (activity_description_index > 1)
 	if (docs_list_id === 'others') {
-		// Remove docs with activity_description_index = 0 and 1
 		docs = docs.filter((doc) => doc.activity_description_index > 1);
 		empty_text = 'Nenhum conteúdo cadastrado';
 	}
@@ -231,7 +231,7 @@ $(document).ready(async function () {
 
 			$('#descriptions-select').hide();
 			$('#name').fadeIn();
-			$('#name').text('Nome do produto');
+			$('#name').text('Nome do produto:');
 			$('.price-block').fadeIn();
 		}
 
@@ -241,7 +241,7 @@ $(document).ready(async function () {
 
 			$('#descriptions-select').hide();
 			$('#name').fadeIn();
-			$('#name').text('Nome do serviço');
+			$('#name').text('Nome do serviço:');
 			$('.price-block').fadeIn();
 		}
 
@@ -256,8 +256,7 @@ $(document).ready(async function () {
 			// Populate descriptions
 			for (let i = 0; i < descriptions.length; i++) {
 				// Append if the current index is not in the docs array
-				if (!docs.find((doc) => doc.activity_description_index === i)) {
-					console.log('Apendou');
+				if (!docs.find((doc) => doc.activity_description_index === i) && i !== 0 && i !== 1) {
 					$('.list:first').append(
 						`<li data-value="${i}" class="option description truncate">${descriptions[i].pt}</li>`
 					);
