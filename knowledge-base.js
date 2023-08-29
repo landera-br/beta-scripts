@@ -209,9 +209,7 @@ $(document).ready(async function () {
 		// Get selected tab
 		const docs_list_id = $('.tab-link.w--current').attr('id');
 
-		console.log(docs_list_id);
-
-		if (docs_list_id === 'produts') {
+		if (docs_list_id === 'products') {
 			$('#description').hide();
 			$('#name').fadeIn();
 			$('#name').attr('placeholder', 'Nome do produto');
@@ -230,9 +228,13 @@ $(document).ready(async function () {
 			$('#name').hide();
 		}
 
+		console.log(descriptions);
+		console.log(descriptions.length);
+
 		for (let i = 0; i < descriptions.length; i++) {
 			// Append if the current index is not in the docs array
 			if (!docs.find((doc) => doc.activity_description_index === i)) {
+				console.log('Apendou');
 				$('.list:first').append(
 					`<li data-value="${i}" class="option description truncate">${descriptions[i].pt}</li>`
 				);
