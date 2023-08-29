@@ -184,12 +184,14 @@ $(document).ready(async function () {
 		// Get tab ID
 		const docs_list_id = $(this).attr('id');
 
+		console.log(docs_list_id);
+
 		switch (docs_list_id) {
 			case 'products':
 				$('#btn-add-text').text('Cadastrar produto');
 			case 'services':
 				$('#btn-add-text').text('Cadastrar serviço');
-			case 'others':
+			default:
 				$('#btn-add-text').text('Cadastrar conteúdo');
 		}
 
