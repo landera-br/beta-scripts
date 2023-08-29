@@ -207,7 +207,7 @@ $(document).ready(async function () {
 		$('.list:first').empty();
 
 		// Get selected tab
-		const docs_list_id = $('.tab-link.selected').attr('id');
+		const docs_list_id = $('.tab-link.w--current').attr('id');
 
 		if (docs_list_id === 'produts') {
 			$('#description').hide();
