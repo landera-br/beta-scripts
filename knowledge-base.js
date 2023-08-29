@@ -99,7 +99,7 @@ function resetDocs(docs, descriptions, docs_list_id = 'produts') {
 	}
 
 	if (docs.length <= 1) {
-		$('#doc-list').append(`<div class="doc-button disabled temp">${empty_test}</div>`);
+		$('#doc-list').append(`<div class="doc-button disabled temp">${empty_text}</div>`);
 	} else {
 		docs.forEach((doc, index) => {
 			if (index === 0) return;
