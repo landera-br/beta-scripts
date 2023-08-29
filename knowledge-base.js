@@ -210,21 +210,21 @@ $(document).ready(async function () {
 		const docs_list_id = $('.tab-link.w--current').attr('id');
 
 		if (docs_list_id === 'products') {
-			// $('#description').hide();
+			$('#description').hide();
 			$('#name').fadeIn();
 			$('#name').attr('placeholder', 'Nome do produto');
 			// Show pricing-model
 		}
 
 		if (docs_list_id === 'services') {
-			// $('#description').hide();
+			$('#description').hide();
 			$('#name').fadeIn();
 			$('#name').attr('placeholder', 'Nome do serviço');
 			// Show pricing-model
 		}
 
 		if (docs_list_id === 'others') {
-			// $('#description').fadeIn();
+			$('#description').fadeIn();
 			$('#name').hide();
 			// Hide pricing-model
 		}
