@@ -188,6 +188,7 @@ $(document).ready(async function () {
 
 		switch (docs_list_id) {
 			case 'products':
+				console.log('Entrou');
 				$('#btn-add-text').text('Cadastrar produto');
 				break;
 			case 'services':
