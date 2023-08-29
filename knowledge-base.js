@@ -231,7 +231,7 @@ $(document).ready(async function () {
 
 			$('#descriptions-select').hide();
 			$('#name').fadeIn();
-			$('#name').attr('placeholder', 'Nome do produto');
+			$('#name').text('Nome do produto');
 			$('.price-block').fadeIn();
 		}
 
@@ -241,7 +241,7 @@ $(document).ready(async function () {
 
 			$('#descriptions-select').hide();
 			$('#name').fadeIn();
-			$('#name').attr('placeholder', 'Nome do serviço');
+			$('#name').text('Nome do serviço');
 			$('.price-block').fadeIn();
 		}
 
