@@ -213,32 +213,30 @@ $(document).ready(async function () {
 			$('#descriptions-select').hide();
 			$('#name').fadeIn();
 			$('#name').attr('placeholder', 'Nome do produto');
-			// Show pricing-model
+			$('#price-block').fadeIn();
 		}
 
 		if (docs_list_id === 'services') {
 			$('#descriptions-select').hide();
 			$('#name').fadeIn();
 			$('#name').attr('placeholder', 'Nome do serviço');
-			// Show pricing-model
+			$('#price-block').fadeIn();
 		}
 
 		if (docs_list_id === 'others') {
 			$('#descriptions-select').fadeIn();
 			$('#name').hide();
-			// Hide pricing-model
-		}
+			$('#price-block').hide();
 
-		console.log(descriptions);
-		console.log(descriptions.length);
-
-		for (let i = 0; i < descriptions.length; i++) {
-			// Append if the current index is not in the docs array
-			if (!docs.find((doc) => doc.activity_description_index === i)) {
-				console.log('Apendou');
-				$('.list:first').append(
-					`<li data-value="${i}" class="option description truncate">${descriptions[i].pt}</li>`
-				);
+			// Populate descriptions
+			for (let i = 0; i < descriptions.length; i++) {
+				// Append if the current index is not in the docs array
+				if (!docs.find((doc) => doc.activity_description_index === i)) {
+					console.log('Apendou');
+					$('.list:first').append(
+						`<li data-value="${i}" class="option description truncate">${descriptions[i].pt}</li>`
+					);
+				}
 			}
 		}
 
