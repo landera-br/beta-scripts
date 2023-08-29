@@ -73,6 +73,7 @@ function activateDocButtons(docs, descriptions) {
 }
 
 function resetDocs(docs, descriptions, docs_list_id = 'produts') {
+	let empty_text = 'Nenhum conteúdo cadastrado';
 	$('#save-doc').val('Salvar conteúdo');
 	$('#doc-form-wrapper').hide();
 	$('#dashboard-placeholder').css('display', 'flex');
@@ -83,11 +84,13 @@ function resetDocs(docs, descriptions, docs_list_id = 'produts') {
 	if (docs_list_id === 'produts') {
 		// Filter docs with activity_description_index = 0
 		docs = docs.filter((doc) => doc.activity_description_index === 0);
+		empty_text = 'Nenhum produto cadastrado';
 	}
 
 	if (docs_list_id === 'services') {
 		// Filter docs with activity_description_index = 1
 		docs = docs.filter((doc) => doc.activity_description_index === 1);
+		empty_text = 'Nenhum serviço cadastrado';
 	}
 
 	if (docs_list_id === 'others') {
@@ -96,7 +99,7 @@ function resetDocs(docs, descriptions, docs_list_id = 'produts') {
 	}
 
 	if (docs.length <= 1) {
-		$('#doc-list').append(`<div class="doc-button disabled temp">Nenhum conteúdo cadastrado</div>`);
+		$('#doc-list').append(`<div class="doc-button disabled temp">${empty_test}</div>`);
 	} else {
 		docs.forEach((doc, index) => {
 			if (index === 0) return;
@@ -184,11 +187,8 @@ $(document).ready(async function () {
 		// Get tab ID
 		const docs_list_id = $(this).attr('id');
 
-		console.log(docs_list_id);
-
 		switch (docs_list_id) {
 			case 'products':
-				console.log('Entrou');
 				$('#btn-add-text').text('Cadastrar produto');
 				break;
 			case 'services':
