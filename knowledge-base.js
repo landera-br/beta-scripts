@@ -184,25 +184,6 @@ $(document).ready(async function () {
 		// Get tab ID
 		const docs_list_id = $(this).attr('id');
 
-		if (docs_list_id === 'produts') {
-			$('#description').hide();
-			$('#name').fadeIn();
-			$('#name').attr('placeholder', 'Nome do produto');
-			// Show pricing-model
-		}
-
-		if (docs_list_id === 'services') {
-			$('#description').hide();
-			$('#name').fadeIn();
-			$('#name').attr('placeholder', 'Nome do serviço');
-			// Show pricing-model
-		}
-
-		if (docs_list_id === 'others') {
-			$('#description').fadeIn();
-			$('#name').hide();
-		}
-
 		resetDocs(docs, descriptions, docs_list_id);
 	});
 
@@ -224,6 +205,28 @@ $(document).ready(async function () {
 
 		// Populate descriptions
 		$('.list:first').empty();
+
+		// Get selected tab
+		const docs_list_id = $('.tab-link.selected').attr('id');
+
+		if (docs_list_id === 'produts') {
+			$('#description').hide();
+			$('#name').fadeIn();
+			$('#name').attr('placeholder', 'Nome do produto');
+			// Show pricing-model
+		}
+
+		if (docs_list_id === 'services') {
+			$('#description').hide();
+			$('#name').fadeIn();
+			$('#name').attr('placeholder', 'Nome do serviço');
+			// Show pricing-model
+		}
+
+		if (docs_list_id === 'others') {
+			$('#description').fadeIn();
+			$('#name').hide();
+		}
 
 		for (let i = 0; i < descriptions.length; i++) {
 			// Append if the current index is not in the docs array
