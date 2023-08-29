@@ -184,6 +184,15 @@ $(document).ready(async function () {
 		// Get tab ID
 		const docs_list_id = $(this).attr('id');
 
+		switch (docs_list_id) {
+			case 'products':
+				$('#btn-add-text').text('Cadastrar produto');
+			case 'services':
+				$('#btn-add-text').text('Cadastrar serviço');
+			case 'others':
+				$('#btn-add-text').text('Cadastrar conteúdo');
+		}
+
 		resetDocs(docs, descriptions, docs_list_id);
 	});
 
@@ -210,6 +219,9 @@ $(document).ready(async function () {
 		const docs_list_id = $('.tab-link.w--current').attr('id');
 
 		if (docs_list_id === 'products') {
+			// Update heading
+			$('#dashboard-heading').text('Cadastrar novo conteúdo');
+
 			$('#descriptions-select').hide();
 			$('#name').fadeIn();
 			$('#name').attr('placeholder', 'Nome do produto');
@@ -217,6 +229,9 @@ $(document).ready(async function () {
 		}
 
 		if (docs_list_id === 'services') {
+			// Update heading
+			$('#dashboard-heading').text('Cadastrar novo serviço');
+
 			$('#descriptions-select').hide();
 			$('#name').fadeIn();
 			$('#name').attr('placeholder', 'Nome do serviço');
@@ -224,6 +239,9 @@ $(document).ready(async function () {
 		}
 
 		if (docs_list_id === 'others') {
+			// Update heading
+			$('#dashboard-heading').text('Cadastrar novo conteúdo');
+
 			$('#descriptions-select').fadeIn();
 			$('#name').hide();
 			$('.price-block').hide();
