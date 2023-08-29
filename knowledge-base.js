@@ -213,20 +213,20 @@ $(document).ready(async function () {
 			$('#descriptions-select').hide();
 			$('#name').fadeIn();
 			$('#name').attr('placeholder', 'Nome do produto');
-			$('#price-block').fadeIn();
+			$('.price-block').fadeIn();
 		}
 
 		if (docs_list_id === 'services') {
 			$('#descriptions-select').hide();
 			$('#name').fadeIn();
 			$('#name').attr('placeholder', 'Nome do serviço');
-			$('#price-block').fadeIn();
+			$('.price-block').fadeIn();
 		}
 
 		if (docs_list_id === 'others') {
 			$('#descriptions-select').fadeIn();
 			$('#name').hide();
-			$('#price-block').hide();
+			$('.price-block').hide();
 
 			// Populate descriptions
 			for (let i = 0; i < descriptions.length; i++) {
