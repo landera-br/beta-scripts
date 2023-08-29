@@ -73,7 +73,7 @@ function activateDocButtons(docs, descriptions) {
 }
 
 function resetDocs(docs, descriptions, docs_list_id = 'produts') {
-	let empty_text = 'Nenhum conteúdo cadastrado';
+	let empty_text = 'Nenhum produto cadastrado';
 	$('#save-doc').val('Salvar conteúdo');
 	$('#doc-form-wrapper').hide();
 	$('#dashboard-placeholder').css('display', 'flex');
@@ -96,6 +96,7 @@ function resetDocs(docs, descriptions, docs_list_id = 'produts') {
 	if (docs_list_id === 'others') {
 		// Remove docs with activity_description_index = 0 and 1
 		docs = docs.filter((doc) => doc.activity_description_index > 1);
+		empty_text = 'Nenhum conteúdo cadastrado';
 	}
 
 	if (docs.length <= 1) {
