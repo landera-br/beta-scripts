@@ -209,6 +209,8 @@ $(document).ready(async function () {
 		// Get selected tab
 		const docs_list_id = $('.tab-link.w--current').attr('id');
 
+		console.log(docs_list_id);
+
 		if (docs_list_id === 'produts') {
 			$('#description').hide();
 			$('#name').fadeIn();
