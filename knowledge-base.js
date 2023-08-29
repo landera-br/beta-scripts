@@ -75,7 +75,7 @@ function activateDocButtons(docs, descriptions) {
 function resetDocs(docs, descriptions, docs_list_id = 'produts') {
 	$('#save-doc').val('Salvar conteúdo');
 	$('#doc-form-wrapper').hide();
-	$('#dashboard-placeholder').fadeIn();
+	$('#dashboard-placeholder').css('display', 'flex');
 	$('#doc-form').trigger('reset');
 	$('#doc-list').empty();
 	$('#doc-list').hide();
@@ -177,7 +177,7 @@ $(document).ready(async function () {
 
 	$('.tab-link').click(function () {
 		$('#doc-form-wrapper').hide();
-		$('#dashboard-placeholder').fadeIn();
+		$('#dashboard-placeholder').css('display', 'flex');
 		$('#save-doc').val('Salvar conteúdo');
 		$('#doc-form').trigger('reset');
 
