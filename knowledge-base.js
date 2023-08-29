@@ -184,6 +184,25 @@ $(document).ready(async function () {
 		// Get tab ID
 		const docs_list_id = $(this).attr('id');
 
+		if (docs_list_id === 'produts') {
+			$('#description').hide();
+			$('#name').fadeIn();
+			$('#name').attr('placeholder', 'Nome do produto');
+			// Show pricing-model
+		}
+
+		if (docs_list_id === 'services') {
+			$('#description').hide();
+			$('#name').fadeIn();
+			$('#name').attr('placeholder', 'Nome do serviço');
+			// Show pricing-model
+		}
+
+		if (docs_list_id === 'others') {
+			$('#description').fadeIn();
+			$('#name').hide();
+		}
+
 		resetDocs(docs, descriptions, docs_list_id);
 	});
 
