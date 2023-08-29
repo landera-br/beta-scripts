@@ -1,0 +1,20 @@
+<script>
+  $(document).ready(function () {
+    // Check if URL contains an ID
+    if (window.location.hash) {
+      // Get the ID from the URL
+      var id = window.location.hash.substring(1);
+
+      // Scroll to element with 10% window height padding
+      var scrollPadding = $(window).height() * 0.1;
+
+      // Scroll to the element with the ID
+      $('html, body').animate(
+        {
+          scrollTop: $('#' + id).offset().top - scrollPadding,
+        },
+        1000
+      );
+    }
+  });
+</script>

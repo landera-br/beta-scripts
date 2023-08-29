@@ -1,0 +1,199 @@
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
+<!-- Navbar Script -->
+<script>
+  // Unhide live chat after page is loaded
+  $(document).ready(function () {
+    // Show with display flex
+    $('.live-chat-wrapper---brix').css('display', 'flex');
+  });
+
+  $('.solution-link').click(function (e) {
+    e.preventDefault();
+    // Check if page is home page
+    if (window.location.pathname === '/') {
+      // Scroll to element with 10% window height padding
+      var scrollPadding = $(window).height() * 0.1;
+
+      // Scroll to the element with the ID
+      $('html, body').animate(
+        {
+          scrollTop: $('#solution').offset().top - scrollPadding,
+        },
+        1000
+      );
+    } else {
+      window.location.href = 'https://betachats.com/#solution';
+    }
+  });
+
+  $('.features-link').click(function (e) {
+    e.preventDefault();
+    // Check if page is home page
+    if (window.location.pathname === '/') {
+      // Scroll to element with 10% window height padding
+      var scrollPadding = $(window).height() * 0.1;
+
+      // Scroll to the element with the ID
+      $('html, body').animate(
+        {
+          scrollTop: $('#features').offset().top - scrollPadding,
+        },
+        1000
+      );
+    } else {
+      window.location.href = 'https://betachats.com/#features';
+    }
+  });
+
+  $('.plans-link').click(function (e) {
+    e.preventDefault();
+    // Check if page is home page
+    if (window.location.pathname === '/') {
+      // Scroll to element with 10% window height padding
+      var scrollPadding = $(window).height() * 0.1;
+
+      // Scroll to the element with the ID
+      $('html, body').animate(
+        {
+          scrollTop: $('#plans').offset().top - scrollPadding,
+        },
+        1000
+      );
+    } else {
+      window.location.href = 'https://betachats.com/#plans';
+    }
+  });
+
+  $('.app-link').click(function (e) {
+    e.preventDefault();
+    // Check if page is home page
+    if (window.location.pathname === '/') {
+      // Scroll to element with 10% window height padding
+      var scrollPadding = $(window).height() * 0.1;
+
+      // Scroll to the element with the ID
+      $('html, body').animate(
+        {
+          scrollTop: $('#app').offset().top - scrollPadding,
+        },
+        1000
+      );
+    } else {
+      window.location.href = 'https://betachats.com/#app';
+    }
+  });
+</script>
+<!-- Firebase Authentication -->
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js';
+
+  const PUBLIC_PAGES = ['/', '/sign-in', '/verification', '/contact-us', '/401', '/404'];
+
+  let user = null;
+
+  // Function to handle invalid token
+  function handleInvalidToken() {
+    $('#nav-placeholder').hide();
+    $('#btn-register').show();
+
+    if (!PUBLIC_PAGES.includes(window.location.pathname)) window.location.href = '/sign-in';
+  }
+
+  // Function to handle the authentication state change
+  function handleAuthStateChange() {
+    var currentUser = firebase.auth().currentUser;
+    var uid = currentUser ? currentUser.uid : null;
+
+    if (uid === fb_uid) {
+      // User is authenticated and matches the logged-in user
+      $('#nav-placeholder').hide();
+      $('#account-menu').show();
+
+      $('#btn-sign-out').click(function (e) {
+        e.preventDefault();
+        Cookies.remove('fb_token');
+        Cookies.remove('fb_uid');
+        Cookies.remove('active_units');
+        Cookies.remove('active_subscriptions');
+        window.location.href = '/';
+      });
+    } else {
+      // User is authenticated but doesn't match the logged-in user
+      handleInvalidToken();
+    }
+  }
+
+  // Function to update the token in local storage
+  function updateToken(token) {
+    Cookies.set('fb_token', token, { secure: true });
+    fb_token = token;
+  }
+
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: 'AIzaSyC5RGfMYnAaiAinPo47PurfFcjw23obinE',
+    authDomain: 'landera-ff197.firebaseapp.com',
+    databaseURL: 'https://landera-ff197.firebaseio.com',
+    projectId: 'landera-ff197',
+    storageBucket: 'landera-ff197.appspot.com',
+    messagingSenderId: '830494589320',
+    appId: '1:830494589320:web:efd2bdc7cff1b8afce7a3d',
+  };
+
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+
+  // Create a new Firebase Authentication provider
+  var auth = firebase.auth();
+  var provider = new firebase.auth.PhoneAuthProvider();
+
+  var fb_token = Cookies.get('fb_token');
+  var fb_uid = Cookies.get('fb_uid');
+
+  // Check if there is a token and if it is still valid
+  if (fb_token) {
+    firebase
+      .auth()
+      .signInWithCustomToken(fb_token)
+      .then(function () {
+        handleAuthStateChange();
+      })
+      .catch(function (error) {
+        // Token has expired or is invalid
+        if (error.code === 'auth/invalid-custom-token') {
+          // Generate a new token using Firebase Auth
+          firebase
+            .auth()
+            .currentUser.getIdToken(/* forceRefresh */ true)
+            .then(function (token) {
+              updateToken(token);
+              handleAuthStateChange();
+            })
+            .catch(function (error) {
+              // Error occurred while generating a new token
+              console.log('Error refreshing token:', error);
+              handleInvalidToken();
+            });
+        } else {
+          // Other error occurred
+          console.log('Error signing in:', error);
+          handleInvalidToken();
+        }
+      });
+  } else {
+    // No token found
+    handleInvalidToken();
+  }
+
+  // Authentication state change listener
+  firebase.auth().onAuthStateChanged(function (user) {
+    if (!user) {
+      // User is signed out or hasn't logged in yet
+      handleInvalidToken();
+    }
+  });
+</script>

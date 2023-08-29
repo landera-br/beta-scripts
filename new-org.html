@@ -1,0 +1,130 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/js/jquery.nice-select.min.js"></script>
+<!-- Handle dynamic input fields -->
+<script>
+  $(document).ready(function () {
+    $('select').niceSelect();
+
+    $('#add-name').click(function () {
+      // Add input above the link
+      $('#add-name').before(
+        '<div class="input-addon-field"><input type="text" class="input-field addon w-input names" maxlength="256" name="Name" data-name="Name" placeholder="Empresa XYZ"><img src="https://uploads-ssl.webflow.com/64773d761bc76753239357f0/64a7f9e83b57d3e024ec85ea_x-mark.svg" loading="lazy" alt="" class="delete-field-icon"></div>'
+      );
+
+      // Delete `.delete-field-icon` event listener
+      $('.delete-field-icon').off('click');
+
+      $('.delete-field-icon').click(function () {
+        $(this).parent().remove();
+      });
+    });
+  });
+</script>
+<!-- Handle form submission -->
+<script>
+  $(document).ready(async function () {
+    // Fade in page with flex
+    $('#container').css('display', 'flex').hide().fadeIn();
+
+    // Get industries
+    let industries = [];
+
+    try {
+      let response = await fetch(`https://beta-backend-7ikj4ovbfa-uc.a.run.app/api/v1/industries`, {
+        method: 'GET',
+        headers: { Authorization: `Bearer ${Cookies.get('fb_token')}` },
+      });
+      if (!response.ok) {
+        throw new Error('Could not fetch industries');
+      } else {
+        industries = await response.json();
+      }
+    } catch (error) {
+      window.location.replace('/');
+    }
+
+    // Populate industries
+    $('.list:first').empty();
+    $('.current:first').text('Selecione um segmento');
+
+    for (let i = 0; i < industries.length; i++) {
+      $('.list:first').append(
+        `<li data-value="${industries[i]._id}" class="option industry truncate">${industries[i].name.pt}</li>`
+      );
+    }
+
+    // Add event listener to the industry select
+    $('.industry').click(function () {
+      $('.list:last').empty();
+      $('.current:last').text('Selecione uma atividade');
+
+      let industry_id = $(this).attr('data-value');
+
+      // Populate activities
+      let activities = industries.find((industry) => industry._id == industry_id)?.activities_data;
+
+      if (!activities) return;
+
+      for (let i = 0; i < activities.length; i++) {
+        $('.list:last').append(
+          `<li data-value="${activities[i]._id}" class="option activity truncate">${activities[i].name.pt}</li>`
+        );
+      }
+    });
+  });
+
+  // Add event listener to the confirm button
+  var confirmation_button = $('#confirmation-button');
+  var form = $('#create-org-form');
+
+  form.submit(async function (event) {
+    event.preventDefault();
+    confirmation_button.val('Cadastrando...');
+    confirmation_button.attr('disabled', true);
+
+    // Check if industry and activity are selected
+    if (!$('li.selected.industry').data('value') || !$('li.selected.activity').data('value')) {
+      alert('Por favor, informe o segmento e a atividade da sua organização.');
+      confirmation_button.val('Finalizar cadastro');
+      confirmation_button.attr('disabled', false);
+      return;
+    }
+
+    let names = $('.names')
+      .map(function () {
+        return $(this).val();
+      })
+      .get();
+
+    const payload = {
+      names,
+      industry: $('li.selected.industry').data('value'),
+      activity: $('li.selected.activity').data('value'),
+      description: $('#description').val(),
+    };
+
+    try {
+      response = await fetch(`https://beta-backend-7ikj4ovbfa-uc.a.run.app/api/v1/orgs/`, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${Cookies.get('fb_token')}`,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (response.status == 201) {
+        window.location.href = '/my-business';
+      } else {
+        throw new Error();
+      }
+    } catch (error) {
+      alert(
+        'Ocorreu um erro ao cadastrar organização. Revise os dados do formulário ou tente novamente mais tarde.'
+      );
+      confirmation_button.val('Finalizar cadastro');
+      confirmation_button.attr('disabled', false);
+      return;
+    }
+  });
+</script>

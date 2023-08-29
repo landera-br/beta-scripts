@@ -1,0 +1,195 @@
+<script>
+  $(document).ready(async function () {
+    // Handle code input
+    $('#code-input').on('input', function () {
+      var input = $(this).val();
+      var sixDigits = input.substring(0, 6); // Retrieve only the first six digits
+
+      // Update the input field value with the first six digits
+      $(this).val(sixDigits);
+
+      if (input.length >= 6) {
+        $(this).blur(); // Remove focus from the input field
+      }
+    });
+
+    // Get phone number from URL phone parameter
+    const urlParams = new URLSearchParams(window.location.search);
+
+    $('#verification-text').text(`Insira o código enviado para ${urlParams.get('phone')}`);
+
+    const phoneNumber = encodeURIComponent(urlParams.get('phone'));
+    const verificationId = urlParams.get('id');
+
+    if (!phoneNumber) window.location.replace('https://www.betachats.com/404');
+
+    // Get resend code div
+    var resendCode = $('#resend-code');
+    resendCode.attr('disabled', false);
+
+    // Change button text with a 60 seconds countdown
+    var seconds = 60;
+    var interval;
+
+    // Function to start the countdown timer
+    function startTimer() {
+      resendCode.removeClass('clickable');
+      resendCode.attr('disabled', true);
+
+      interval = setInterval(function () {
+        seconds--;
+        resendCode.text(`Reenviar código (${seconds}s)`);
+        if (seconds == 0) {
+          clearInterval(interval);
+          resendCode.text('Reenviar código');
+          resendCode.addClass('clickable');
+          resendCode.attr('disabled', false);
+        }
+      }, 1000);
+    }
+
+    startTimer();
+
+    // Function to send the verification code
+    async function sendVerificationCode() {
+      // Resend the verification code using Firebase
+      $('#recaptcha').show();
+      resendCode.hide();
+
+      window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container');
+
+      // Render the reCAPTCHA widget
+      recaptchaVerifier.render().then((widgetId) => {
+        window.recaptchaWidgetId = widgetId;
+      });
+
+      const provider = new firebase.auth.PhoneAuthProvider();
+
+      try {
+        await provider.verifyPhoneNumber(urlParams.get('phone'), recaptchaVerifier);
+        console.log('Verification code resent successfully.');
+      } catch (error) {
+        console.error('Error resending verification code:', error);
+      }
+
+      // Start the countdown timer
+      seconds = 60;
+      resendCode.show();
+      $('#recaptcha-container').empty();
+      $('#recaptcha').hide();
+      startTimer();
+    }
+
+    // Add event listener to the resend code button
+    resendCode.click(async function () {
+      await sendVerificationCode();
+    });
+
+    let response;
+
+    try {
+      response = await fetch(
+        `https://beta-backend-7ikj4ovbfa-uc.a.run.app/api/v1/users?phone=${phoneNumber}`,
+        {
+          method: 'GET',
+          headers: { Accept: 'application/json' },
+        }
+      );
+    } catch (error) {
+      console.log(error);
+      alert('Ocorreu um erro ao entrar com o usuário. Tente novamente mais tarde.');
+    }
+
+    data = await response.json();
+
+    if (!data.exists) $('.first-access-block').fadeIn();
+
+    // Add event listener to the confirm button
+    var form = $('#verification-form');
+
+    form.submit(function (event) {
+      event.preventDefault();
+
+      // If #email-input is visible, then it should not be empty
+      if ($('#email-input').is(':visible') && !$('#email-input').val()) {
+        alert('Por favor, insira seu e-mail.');
+        return;
+      }
+
+      // Change button text and prevent clicking while sending OTP
+      $('#confirmation-button').val('Confirmando...');
+      $('#confirmation-button').attr('disabled', true);
+
+      // Get verification code
+      var code = $('#code-input').val();
+
+      // Confirm verification code and sign in the user
+      const credential = firebase.auth.PhoneAuthProvider.credential(verificationId, code);
+      firebase
+        .auth()
+        .signInWithCredential(credential)
+        .then(async (userCredential) => {
+          let user = userCredential.user;
+          const fb_token = await user.getIdToken();
+
+          if ($('#email-input').val()) {
+            try {
+              user = await fetch(`https://beta-backend-7ikj4ovbfa-uc.a.run.app/api/v1/users`, {
+                method: 'POST',
+                headers: {
+                  Accept: 'application/json',
+                  'Content-Type': 'application/json',
+                  Authorization: `Bearer ${fb_token}`,
+                },
+                body: JSON.stringify({
+                  fb_uid: user.uid,
+                  phone: urlParams.get('phone'),
+                  email: $('#email-input').val(),
+                }),
+              });
+
+              if (user.status == 201) {
+                user = await user.json();
+              } else {
+                throw new Error();
+              }
+            } catch (error) {
+              alert('Ocorreu um erro ao criar novo usuário. Tente novamente mais tarde.');
+              $('#confirmation-button').val('Confirmar');
+              $('#confirmation-button').attr('disabled', false);
+              return;
+            }
+          } else {
+            try {
+              user = await fetch(`https://beta-backend-7ikj4ovbfa-uc.a.run.app/api/v1/users`, {
+                method: 'GET',
+                headers: { Authorization: `Bearer ${fb_token}` },
+              });
+
+              if (user.status == 200) {
+                user = await user.json();
+              } else {
+                throw new Error();
+              }
+            } catch (error) {
+              alert('Ocorreu um erro ao ler dados do usuário. Tente novamente mais tarde.');
+              $('#confirmation-button').val('Confirmar');
+              $('#confirmation-button').attr('disabled', false);
+              return;
+            }
+          }
+
+          Cookies.set('fb_uid', user.fb_uid, { secure: true });
+          Cookies.set('fb_token', fb_token, { secure: true });
+
+          window.location.replace('/');
+        })
+        .catch((error) => {
+          alert('Código inválido. Tente novamente!');
+          $('#confirmation-button').val('Confirmar');
+          $('#confirmation-button').attr('disabled', false);
+          return;
+        });
+    });
+  });
+</script>
