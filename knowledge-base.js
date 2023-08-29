@@ -189,10 +189,13 @@ $(document).ready(async function () {
 		switch (docs_list_id) {
 			case 'products':
 				$('#btn-add-text').text('Cadastrar produto');
+				break;
 			case 'services':
 				$('#btn-add-text').text('Cadastrar serviço');
+				break;
 			default:
 				$('#btn-add-text').text('Cadastrar conteúdo');
+				break;
 		}
 
 		resetDocs(docs, descriptions, docs_list_id);
