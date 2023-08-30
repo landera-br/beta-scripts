@@ -59,15 +59,15 @@ function activateDocButtons(docs, activity_descriptions) {
 		// Populate form
 		$('#doc-description').val(doc.description);
 
-		// Check if doc.content is a text
-		if (doc.content.category !== 'text') {
+		// Check if doc.category.name is appointment
+		if (doc.category.name === 'appointment') {
 			$('.description-block').css('display', 'none');
 			$('.appointment-block').css('display', 'block');
-			$('#appointment').val(doc.content.link);
+			$('#appointment').val(doc.link);
 		} else {
 			$('.description-block').css('display', 'block');
 			$('.appointment-block').css('display', 'none');
-			$('#description').val(doc.content.raw);
+			$('#description').val(doc.description);
 		}
 	});
 }
@@ -106,7 +106,7 @@ function resetDocs(docs, activity_descriptions, docs_list_id = 'produts') {
 			if (index === 0) return;
 			$('#doc-list').append(
 				`<div class="doc-button" id="${doc.activity_description_index.toString()}"><img src="https://uploads-ssl.webflow.com/64773d761bc76753239357f0/64b3ee5171c9469766a2c07f_document.svg" loading="eager" alt="" class="doc-icon"><div class="truncate">${
-					doc.content.category.description.pt
+					doc.category.description.pt
 				}</div></div>`
 			);
 		});
@@ -330,33 +330,31 @@ $(document).ready(async function () {
 			index: $('.doc-button.selected').attr('id')
 				? parseInt($('.doc-button.selected').attr('id'))
 				: docs.length + 1,
-			content: {
-				category: {
-					name: category_name,
-					description: activity_description_data
-						? {
-								en: activity_description_data ? activity_description_data.en : undefined,
-								pt: activity_description_data ? activity_description_data.pt : undefined,
-						  }
-						: undefined,
-				},
-				link: category_name === 'appointment' ? $('#appointment').val() : undefined,
-				description: category_name === 'appointment' ? undefined : $('#description').val(),
-				name:
-					category_name === 'product'
-						? $('#product-name').val()
-						: category_name === 'service'
-						? $('#service-name').val()
-						: undefined,
-				model_price: $('input[name="model-price"]:checked').val(),
-				price:
-					category_name === 'product'
-						? $('#product-price').val()
-						: category_name === 'service'
-						? $('#service-price').val()
-						: undefined,
-				currency: 'BRL',
+			category: {
+				name: category_name,
+				description: activity_description_data
+					? {
+							en: activity_description_data ? activity_description_data.en : undefined,
+							pt: activity_description_data ? activity_description_data.pt : undefined,
+					  }
+					: undefined,
 			},
+			link: category_name === 'appointment' ? $('#appointment').val() : undefined,
+			description: category_name === 'appointment' ? undefined : $('#description').val(),
+			name:
+				category_name === 'product'
+					? $('#product-name').val()
+					: category_name === 'service'
+					? $('#service-name').val()
+					: undefined,
+			model_price: $('input[name="model-price"]:checked').val(),
+			price:
+				category_name === 'product'
+					? $('#product-price').val()
+					: category_name === 'service'
+					? $('#service-price').val()
+					: undefined,
+			currency: 'BRL',
 		};
 
 		try {
