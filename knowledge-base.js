@@ -51,7 +51,7 @@ function activateDocButtons(docs, activity_descriptions) {
 		$('.current:first').text(option);
 
 		// Set the option value
-		$('li.option.description').click(function () {
+		$('li.option.activity-description').click(function () {
 			const value = $(this).attr('data-value');
 			$('#description-index').val(value);
 		});
@@ -63,11 +63,11 @@ function activateDocButtons(docs, activity_descriptions) {
 		if (doc.content.category !== 'text') {
 			$('.description-block').css('display', 'none');
 			$('.appointment-block').css('display', 'block');
-			$('#appointment-content').val(doc.content.link);
+			$('#appointment').val(doc.content.link);
 		} else {
 			$('.description-block').css('display', 'block');
 			$('.appointment-block').css('display', 'none');
-			$('#description-content').val(doc.content.raw);
+			$('#description').val(doc.content.raw);
 		}
 	});
 }
@@ -163,10 +163,9 @@ $(document).ready(async function () {
 
 	resetDocs(docs, activity_descriptions);
 
-	// Appointment description event listener
-	$('#description').change(function () {
-		$('#description-content').val('');
-		$('#appointment-content').val('');
+	$('#activity-description').change(function () {
+		$('#description').val('');
+		$('#appointment').val('');
 
 		const APPOINTMENT_LABELS = ['Datas e horários disponíveis para reservas/agendamentos'];
 
@@ -286,12 +285,10 @@ $(document).ready(async function () {
 
 		$('#save-doc').val('Salvando...');
 
-		const activity_description = $('li.selected.description').data('value');
-		const description = $('#description-content').val();
-		const appointment = $('#appointment-content').val();
+		const activity_description = $('li.selected.activity-description').data('value');
 
 		// Validate fields
-		if (!description && !appointment) {
+		if (!$('#description').val() && !$('#appointment').val()) {
 			alert('Preencha todos os campos!');
 			$('#save-doc').val('Salvar conteúdo');
 			return;
@@ -317,7 +314,7 @@ $(document).ready(async function () {
 					$('#save-doc').val('Salvar conteúdo');
 					return;
 				}
-				if ($('#appointment-content').val()) {
+				if ($('#appointment').val()) {
 					category_name = 'appointment';
 				} else {
 					category_name = 'other';
@@ -338,8 +335,8 @@ $(document).ready(async function () {
 					name: category_name,
 					description: activity_description_data ? activity_description_data.pt : undefined,
 				},
-				link: category_name === 'appointment' ? appointment : undefined,
-				description: category_name === 'appointment' ? description : undefined,
+				link: category_name === 'appointment' ? $('#appointment').val() : undefined,
+				description: category_name === 'appointment' ? $('#description').val() : undefined,
 				name:
 					category_name === 'product'
 						? $('#product-name').val()
