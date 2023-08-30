@@ -339,10 +339,20 @@ $(document).ready(async function () {
 					description: activity_description_data ? activity_description_data.pt : undefined,
 				},
 				link: category_name === 'appointment' ? appointment : undefined,
-				raw: category_name === 'appointment' ? description : undefined,
-				name: $('#name').val() ? $('#name').val() : undefined,
+				description: category_name === 'appointment' ? description : undefined,
+				name:
+					category_name === 'product'
+						? $('#product-name').val()
+						: category_name === 'service'
+						? $('#service-name').val()
+						: undefined,
 				model_price: $('input[name="model-price"]:checked').val(),
-				price: $('#price').val() ? $('#price').val() : undefined,
+				price:
+					category_name === 'product'
+						? $('#product-price').val()
+						: category_name === 'service'
+						? $('#service-price').val()
+						: undefined,
 				currency: 'BRL',
 			},
 		};
