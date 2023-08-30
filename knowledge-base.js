@@ -348,15 +348,7 @@ $(document).ready(async function () {
 			(key) => new_doc.content[key] == null && delete new_doc.content[key]
 		);
 
-		const new_doc_filtered = {
-			index: new_doc.index,
-			content: Object.fromEntries(
-				Object.entries(new_doc.content).filter(([key, value]) => value != null)
-			),
-		};
-
 		console.log(new_doc);
-		console.log(new_doc_filtered);
 
 		return;
 
