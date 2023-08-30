@@ -5,7 +5,7 @@ $(document).ready(function () {
 const BACKEND_URL = 'https://beta-backend-7ikj4ovbfa-uc.a.run.app/api/v1';
 
 // Support functions
-function activateDocButtons(docs, descriptions) {
+function activateDocButtons(docs, activity_descriptions) {
 	$('.org-button').click(function () {
 		const urlParams = new URLSearchParams(window.location.search);
 		const org_id = urlParams.get('org_id');
@@ -25,14 +25,14 @@ function activateDocButtons(docs, descriptions) {
 		$('#dashboard-placeholder').hide();
 		$('#doc-form-wrapper').fadeIn();
 
-		// Populate descriptions
+		// Populate activity_descriptions
 		$('.list:first').empty();
 
-		for (let i = 0; i < descriptions.length; i++) {
+		for (let i = 0; i < activity_descriptions.length; i++) {
 			// Append if the current index is not in the docs array
 			if (!docs.find((doc) => doc.activity_description_index === i)) {
 				$('.list:first').append(
-					`<li data-value="${i}" class="option description truncate">${descriptions[i].pt}</li>`
+					`<li data-value="${i}" class="option description truncate">${activity_descriptions[i].pt}</li>`
 				);
 			}
 		}
@@ -42,12 +42,12 @@ function activateDocButtons(docs, descriptions) {
 			`<li data-value="${
 				doc.activity_description_index
 			}" class="option description truncate selected">${
-				descriptions[doc.activity_description_index].pt
+				activity_descriptions[doc.activity_description_index].pt
 			}</li>`
 		);
 
 		// Update the selected option
-		const option = descriptions[doc.activity_description_index].pt;
+		const option = activity_descriptions[doc.activity_description_index].pt;
 		$('.current:first').text(option);
 
 		// Set the option value
@@ -67,12 +67,12 @@ function activateDocButtons(docs, descriptions) {
 		} else {
 			$('.description-block').css('display', 'block');
 			$('.appointment-block').css('display', 'none');
-			$('#text-content').val(doc.content.raw);
+			$('#description-content').val(doc.content.raw);
 		}
 	});
 }
 
-function resetDocs(docs, descriptions, docs_list_id = 'produts') {
+function resetDocs(docs, activity_descriptions, docs_list_id = 'produts') {
 	let empty_text = 'Nenhum produto cadastrado';
 	$('#save-doc').val('Salvar conteúdo');
 	$('#doc-form-wrapper').hide();
@@ -106,14 +106,14 @@ function resetDocs(docs, descriptions, docs_list_id = 'produts') {
 			if (index === 0) return;
 			$('#doc-list').append(
 				`<div class="doc-button" id="${doc.activity_description_index.toString()}"><img src="https://uploads-ssl.webflow.com/64773d761bc76753239357f0/64b3ee5171c9469766a2c07f_document.svg" loading="eager" alt="" class="doc-icon"><div class="truncate">${
-					descriptions[doc.activity_description_index].pt
+					activity_descriptions[doc.activity_description_index].pt
 				}</div></div>`
 			);
 		});
 	}
 	$('#doc-list').fadeIn();
 
-	activateDocButtons(docs, descriptions);
+	activateDocButtons(docs, activity_descriptions);
 }
 
 // Handle page actions
@@ -125,7 +125,7 @@ $(document).ready(async function () {
 	const fb_token = Cookies.get('fb_token');
 	let response;
 	let org;
-	let descriptions;
+	let activity_descriptions;
 
 	// Get org data
 	try {
@@ -151,7 +151,7 @@ $(document).ready(async function () {
 			}
 		);
 		if (!response.ok) throw new Error('Unable to fetch data');
-		descriptions = await response.json();
+		activity_descriptions = await response.json();
 	} catch (error) {
 		window.location.replace('/my-business');
 	}
@@ -161,11 +161,11 @@ $(document).ready(async function () {
 	$('#unit-address').text(org.unit_address);
 	$('.org-section').fadeIn();
 
-	resetDocs(docs, descriptions);
+	resetDocs(docs, activity_descriptions);
 
 	// Appointment description event listener
 	$('#description').change(function () {
-		$('#text-content').val('');
+		$('#description-content').val('');
 		$('#appointment-content').val('');
 
 		const APPOINTMENT_LABELS = ['Datas e horários disponíveis para reservas/agendamentos'];
@@ -200,7 +200,7 @@ $(document).ready(async function () {
 				break;
 		}
 
-		resetDocs(docs, descriptions, docs_list_id);
+		resetDocs(docs, activity_descriptions, docs_list_id);
 	});
 
 	$('.add-doc').click(function () {
@@ -219,16 +219,15 @@ $(document).ready(async function () {
 		// Add new doc button
 		$('#doc-list').prepend(`<div class="doc-button selected truncate temp">Novo conteúdo</div>`);
 
-		// Populate descriptions
+		// Populate activity_descriptions
 		$('.list:first').empty();
 
 		// Get selected tab
 		const docs_list_id = $('.tab-link.w--current').attr('id');
 
 		if (docs_list_id === 'products') {
-			// Update heading
-			$('#dashboard-heading').text('Cadastrar novo conteúdo');
-			$('#descriptions-select').hide();
+			$('#dashboard-heading').text('Cadastrar novo produto');
+			$('#activity_descriptions-select').hide();
 
 			$('.product-grid').fadeIn();
 			$('.service-grid').hide();
@@ -238,7 +237,7 @@ $(document).ready(async function () {
 		if (docs_list_id === 'services') {
 			// Update heading
 			$('#dashboard-heading').text('Cadastrar novo serviço');
-			$('#descriptions-select').hide();
+			$('#activity_descriptions-select').hide();
 
 			$('.product-grid').hide();
 			$('.service-grid').fadeIn();
@@ -248,18 +247,18 @@ $(document).ready(async function () {
 		if (docs_list_id === 'others') {
 			// Update heading
 			$('#dashboard-heading').text('Cadastrar novo conteúdo');
-			$('#descriptions-select').fadeIn();
+			$('#activity_descriptions-select').fadeIn();
 
 			$('.product-grid').hide();
 			$('.service-grid').hide();
 			$('.other-grid').fadeIn();
 
-			// Populate descriptions
-			for (let i = 0; i < descriptions.length; i++) {
+			// Populate activity_descriptions
+			for (let i = 0; i < activity_descriptions.length; i++) {
 				// Append if the current index is not in the docs array
 				if (!docs.find((doc) => doc.activity_description_index === i) && i !== 0 && i !== 1) {
 					$('.list:first').append(
-						`<li data-value="${i}" class="option description truncate">${descriptions[i].pt}</li>`
+						`<li data-value="${i}" class="option description truncate">${activity_descriptions[i].pt}</li>`
 					);
 				}
 			}
@@ -271,7 +270,7 @@ $(document).ready(async function () {
 		$('.doc-button').off('click');
 
 		// Add event listener to new button
-		activateDocButtons(docs, descriptions);
+		activateDocButtons(docs, activity_descriptions);
 
 		// Make button selected
 		$(`#${docs.length + 1}`)
@@ -282,34 +281,70 @@ $(document).ready(async function () {
 
 	$('#save-doc').click(async function (event) {
 		event.preventDefault();
+		let activity_description_data = {};
+		let category_name = '';
+
 		$('#save-doc').val('Salvando...');
 
-		const description = $('li.selected.description').data('value');
-		const text = $('#text-content').val();
+		const activity_description = $('li.selected.description').data('value');
+		const text = $('#description-content').val();
 		const appointment = $('#appointment-content').val();
 
 		// Validate fields
-		if (typeof description == 'undefined' || (!text && !appointment)) {
+		if (typeof activity_description == 'undefined' || (!text && !appointment)) {
 			alert('Preencha todos os campos!');
 			$('#save-doc').val('Salvar conteúdo');
 			return;
+		} else {
+			// Get corresponding activity_description from activity_descriptions
+			activity_description_data = activity_descriptions.find(
+				(description) => description.pt === activity_description
+			);
+		}
+
+		const docs_list_id = $('.tab-link.w--current').attr('id');
+
+		switch (docs_list_id) {
+			case 'products':
+				category_name = 'product';
+				break;
+			case 'services':
+				category_name = 'service';
+				break;
+			case 'others':
+				if ($('#appointment-content').val()) {
+					category_name = 'appointment';
+				} else {
+					category_name = 'other';
+				}
+				break;
+			default:
+				alert('Desculpe, houve um erro ao salvar o documento. Tente novamente mais tarde.');
+				$('#save-doc').val('Salvar conteúdo');
+				break;
 		}
 
 		const new_doc = {
-			activity_description_index: $('li.selected.description').data('value'),
 			index: $('.doc-button.selected').attr('id')
 				? parseInt($('.doc-button.selected').attr('id'))
 				: docs.length + 1,
-			content: {},
+			content: {
+				category: {
+					name: category_name,
+					description: activity_description_data,
+				},
+			},
 		};
 
-		if (text) {
-			new_doc.content.category = 'text';
-			new_doc.content.raw = text;
-		} else {
-			new_doc.content.category = 'appointment_link';
+		if (new_doc.content.category.name === 'appointment') {
 			new_doc.content.link = appointment;
+		} else {
+			new_doc.content.raw = text;
 		}
+
+		console.log(new_doc);
+
+		return;
 
 		try {
 			response = await fetch(`${BACKEND_URL}/docs?org_id=${org_id}&unit_id=${unit_id}`, {
@@ -324,7 +359,7 @@ $(document).ready(async function () {
 				throw new Error('Network response was not ok');
 			} else {
 				docs = await response.json();
-				resetDocs(docs, descriptions);
+				resetDocs(docs, activity_descriptions);
 			}
 		} catch (error) {
 			alert('Desculpe, houve um erro ao salvar o documento. Tente novamente mais tarde.');
@@ -337,7 +372,7 @@ $(document).ready(async function () {
 		let index = $('.doc-button.selected').attr('id');
 
 		if (typeof index == 'undefined' || isNaN(index)) {
-			resetDocs(docs, descriptions);
+			resetDocs(docs, activity_descriptions);
 			return;
 		} else {
 			index = parseInt(index);
@@ -359,7 +394,7 @@ $(document).ready(async function () {
 			} else {
 				$('#delete-button').text('Deletar');
 				docs = await response.json();
-				resetDocs(docs, descriptions);
+				resetDocs(docs, activity_descriptions);
 			}
 		} catch (error) {
 			if (alert('Desculpe, houve um erro ao deletar o documento. Tente novamente mais tarde.')) {
