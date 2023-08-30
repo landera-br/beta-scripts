@@ -106,7 +106,7 @@ function resetDocs(docs, activity_descriptions, docs_list_id = 'produts') {
 			if (index === 0) return;
 			$('#doc-list').append(
 				`<div class="doc-button" id="${doc.activity_description_index.toString()}"><img src="https://uploads-ssl.webflow.com/64773d761bc76753239357f0/64b3ee5171c9469766a2c07f_document.svg" loading="eager" alt="" class="doc-icon"><div class="truncate">${
-					activity_descriptions[doc.activity_description_index].pt
+					doc.content.category.description.pt
 				}</div></div>`
 			);
 		});
@@ -333,7 +333,10 @@ $(document).ready(async function () {
 			content: {
 				category: {
 					name: category_name,
-					description: activity_description_data ? activity_description_data.en : undefined,
+					description: {
+						en: activity_description_data ? activity_description_data.en : undefined,
+						pt: activity_description_data ? activity_description_data.pt : undefined,
+					},
 				},
 				link: category_name === 'appointment' ? $('#appointment').val() : undefined,
 				description: category_name === 'appointment' ? undefined : $('#description').val(),
