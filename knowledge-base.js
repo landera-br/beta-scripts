@@ -72,7 +72,7 @@ function activateDocButtons(docs, activity_descriptions) {
 	});
 }
 
-function resetDocs(docs, activity_descriptions, docs_list_id = 'produts') {
+function resetDocs(docs, activity_descriptions, docs_list_id = 'products') {
 	let empty_text = 'Nenhum produto cadastrado';
 	$('#save-doc').val('Salvar conteúdo');
 	$('#doc-form-wrapper').hide();
@@ -84,7 +84,7 @@ function resetDocs(docs, activity_descriptions, docs_list_id = 'produts') {
 	console.log(docs);
 
 	// Filter products (activity_description_index = 0)
-	if (docs_list_id === 'produts') {
+	if (docs_list_id === 'products') {
 		docs = docs.filter((doc) => doc.activity_description_index === 0);
 		empty_text = 'Nenhum produto cadastrado';
 	}
@@ -142,6 +142,9 @@ $(document).ready(async function () {
 	}
 
 	let docs = org.docs;
+
+	console.log('Aqui');
+	console.log(docs);
 
 	// Get activities by ID
 	try {
