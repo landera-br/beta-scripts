@@ -287,11 +287,11 @@ $(document).ready(async function () {
 		$('#save-doc').val('Salvando...');
 
 		const activity_description = $('li.selected.description').data('value');
-		const text = $('#description-content').val();
+		const description = $('#description-content').val();
 		const appointment = $('#appointment-content').val();
 
 		// Validate fields
-		if (typeof activity_description == 'undefined' || (!text && !appointment)) {
+		if (!description && !appointment) {
 			alert('Preencha todos os campos!');
 			$('#save-doc').val('Salvar conteúdo');
 			return;
@@ -312,6 +312,11 @@ $(document).ready(async function () {
 				category_name = 'service';
 				break;
 			case 'others':
+				if (!activity_description_data) {
+					alert('Por favor, selecione um assunto!');
+					$('#save-doc').val('Salvar conteúdo');
+					return;
+				}
 				if ($('#appointment-content').val()) {
 					category_name = 'appointment';
 				} else {
@@ -339,7 +344,7 @@ $(document).ready(async function () {
 		if (new_doc.content.category.name === 'appointment') {
 			new_doc.content.link = appointment;
 		} else {
-			new_doc.content.raw = text;
+			new_doc.content.raw = description;
 		}
 
 		console.log(new_doc);
