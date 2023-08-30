@@ -333,10 +333,12 @@ $(document).ready(async function () {
 			content: {
 				category: {
 					name: category_name,
-					description: {
-						en: activity_description_data ? activity_description_data.en : undefined,
-						pt: activity_description_data ? activity_description_data.pt : undefined,
-					},
+					description: activity_description_data
+						? {
+								en: activity_description_data ? activity_description_data.en : undefined,
+								pt: activity_description_data ? activity_description_data.pt : undefined,
+						  }
+						: undefined,
 				},
 				link: category_name === 'appointment' ? $('#appointment').val() : undefined,
 				description: category_name === 'appointment' ? undefined : $('#description').val(),
