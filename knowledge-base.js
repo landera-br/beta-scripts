@@ -336,17 +336,16 @@ $(document).ready(async function () {
 			content: {
 				category: {
 					name: category_name,
-					description: activity_description_data ? activity_description_data.pt : null,
+					description: activity_description_data ? activity_description_data.pt : undefined,
 				},
-				link: category_name === 'appointment' ? appointment : null,
-				raw: category_name === 'appointment' ? description : null,
+				link: category_name === 'appointment' ? appointment : undefined,
+				raw: category_name === 'appointment' ? description : undefined,
+				name: $('#name').val() ? $('#name').val() : undefined,
+				model_price: $('input[name="model-price"]:checked').val(),
+				price: $('#price').val() ? $('#price').val() : undefined,
+				currency: 'BRL',
 			},
 		};
-
-		// Clean null values
-		Object.keys(new_doc.content).forEach(
-			(key) => new_doc.content[key] == null && delete new_doc.content[key]
-		);
 
 		console.log(new_doc);
 
