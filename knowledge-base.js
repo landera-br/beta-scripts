@@ -336,16 +336,17 @@ $(document).ready(async function () {
 			content: {
 				category: {
 					name: category_name,
-					description: activity_description_data,
+					description: activity_description_data ? activity_description_data.pt : null,
 				},
+				link: new_doc.content.link === 'appointment' ? appointment : null,
+				raw: new_doc.content.link === 'appointment' ? description : null,
 			},
 		};
 
-		if (new_doc.content.category.name === 'appointment') {
-			new_doc.content.link = appointment;
-		} else {
-			new_doc.content.raw = description;
-		}
+		// Clean null values
+		Object.keys(new_doc.content).forEach(
+			(key) => new_doc.content[key] == null && delete new_doc.content[key]
+		);
 
 		console.log(new_doc);
 
