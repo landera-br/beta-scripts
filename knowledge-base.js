@@ -280,7 +280,7 @@ $(document).ready(async function () {
 
 	$('#save-doc').click(async function (event) {
 		event.preventDefault();
-		let activity_description_data = {};
+		let activity_description_data;
 		let category_name = '';
 
 		$('#save-doc').val('Salvando...');
