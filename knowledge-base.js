@@ -354,10 +354,6 @@ $(document).ready(async function () {
 			},
 		};
 
-		console.log(new_doc);
-
-		return;
-
 		try {
 			response = await fetch(`${BACKEND_URL}/docs?org_id=${org_id}&unit_id=${unit_id}`, {
 				method: 'PUT',
