@@ -338,12 +338,16 @@ $(document).ready(async function () {
 					name: category_name,
 					description: activity_description_data ? activity_description_data.pt : null,
 				},
-				link: new_doc.content.link === 'appointment' ? appointment : null,
-				raw: new_doc.content.link === 'appointment' ? description : null,
+				link: category_name === 'appointment' ? appointment : null,
+				raw: category_name === 'appointment' ? description : null,
 			},
 		};
 
 		// Clean null values
+		Object.keys(new_doc.content).forEach(
+			(key) => new_doc.content[key] == null && delete new_doc.content[key]
+		);
+
 		const new_doc_filtered = {
 			index: new_doc.index,
 			content: Object.fromEntries(
