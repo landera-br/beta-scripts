@@ -336,7 +336,7 @@ $(document).ready(async function () {
 					description: activity_description_data ? activity_description_data.pt : undefined,
 				},
 				link: category_name === 'appointment' ? $('#appointment').val() : undefined,
-				description: category_name === 'appointment' ? $('#description').val() : undefined,
+				description: category_name === 'appointment' ? undefined : $('#description').val(),
 				name:
 					category_name === 'product'
 						? $('#product-name').val()
