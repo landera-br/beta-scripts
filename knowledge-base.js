@@ -81,6 +81,8 @@ function resetDocs(docs, activity_descriptions, docs_list_id = 'produts') {
 	$('#doc-list').empty();
 	$('#doc-list').hide();
 
+	console.log(docs);
+
 	// Filter products (activity_description_index = 0)
 	if (docs_list_id === 'produts') {
 		docs = docs.filter((doc) => doc.activity_description_index === 0);
