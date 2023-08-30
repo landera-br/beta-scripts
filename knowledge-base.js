@@ -61,11 +61,11 @@ function activateDocButtons(docs, descriptions) {
 
 		// Check if doc.content is a text
 		if (doc.content.category !== 'text') {
-			$('.text-block').css('display', 'none');
+			$('.description-block').css('display', 'none');
 			$('.appointment-block').css('display', 'block');
 			$('#appointment-content').val(doc.content.link);
 		} else {
-			$('.text-block').css('display', 'block');
+			$('.description-block').css('display', 'block');
 			$('.appointment-block').css('display', 'none');
 			$('#text-content').val(doc.content.raw);
 		}
@@ -171,10 +171,10 @@ $(document).ready(async function () {
 		const APPOINTMENT_LABELS = ['Datas e horários disponíveis para reservas/agendamentos'];
 
 		if (APPOINTMENT_LABELS.includes($('.current:first').text())) {
-			$('.text-block').css('display', 'none');
+			$('.description-block').css('display', 'none');
 			$('.appointment-block').css('display', 'block');
 		} else {
-			$('.text-block').css('display', 'block');
+			$('.description-block').css('display', 'block');
 			$('.appointment-block').css('display', 'none');
 		}
 	});
@@ -213,7 +213,7 @@ $(document).ready(async function () {
 		$('#doc-form-wrapper').fadeIn();
 
 		// Reset content input
-		$('.text-block').css('display', 'block');
+		$('.description-block').css('display', 'block');
 		$('.appointment-block').css('display', 'none');
 
 		// Add new doc button
@@ -228,30 +228,31 @@ $(document).ready(async function () {
 		if (docs_list_id === 'products') {
 			// Update heading
 			$('#dashboard-heading').text('Cadastrar novo conteúdo');
-
 			$('#descriptions-select').hide();
-			$('#name').fadeIn();
-			$('#name').text('Nome do produto:');
-			$('.price-block').fadeIn();
+
+			$('.product-grid').fadeIn();
+			$('.service-grid').hide();
+			$('.other-grid').hide();
 		}
 
 		if (docs_list_id === 'services') {
 			// Update heading
 			$('#dashboard-heading').text('Cadastrar novo serviço');
-
 			$('#descriptions-select').hide();
-			$('#name').fadeIn();
-			$('#name').text('Nome do serviço:');
-			$('.price-block').fadeIn();
+
+			$('.product-grid').hide();
+			$('.service-grid').fadeIn();
+			$('.other-grid').hide();
 		}
 
 		if (docs_list_id === 'others') {
 			// Update heading
 			$('#dashboard-heading').text('Cadastrar novo conteúdo');
-
 			$('#descriptions-select').fadeIn();
-			$('#name').hide();
-			$('.price-block').hide();
+
+			$('.product-grid').hide();
+			$('.service-grid').hide();
+			$('.other-grid').fadeIn();
 
 			// Populate descriptions
 			for (let i = 0; i < descriptions.length; i++) {
