@@ -333,7 +333,7 @@ $(document).ready(async function () {
 			content: {
 				category: {
 					name: category_name,
-					description: activity_description_data ? activity_description_data.pt : undefined,
+					description: activity_description_data ? activity_description_data.en : undefined,
 				},
 				link: category_name === 'appointment' ? $('#appointment').val() : undefined,
 				description: category_name === 'appointment' ? undefined : $('#description').val(),
