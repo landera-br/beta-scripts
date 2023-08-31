@@ -81,6 +81,8 @@ function resetDocs(docs, activity_descriptions, docs_list_id = 'products') {
 	$('#doc-list').empty();
 	$('#doc-list').hide();
 
+	console.log(docs);
+
 	// Filter products (activity_description_index = 0)
 	if (docs_list_id === 'products') {
 		docs = docs.filter((doc) => doc.category.name === 'product');
@@ -100,6 +102,8 @@ function resetDocs(docs, activity_descriptions, docs_list_id = 'products') {
 		);
 		empty_text = 'Nenhum conteúdo cadastrado';
 	}
+
+	console.log(docs);
 
 	if (docs.length <= 1) {
 		$('#doc-list').append(`<div class="doc-button disabled temp">${empty_text}</div>`);
