@@ -49,7 +49,7 @@ function activateDocButtons(docs, activity_descriptions) {
 				// Populate service data
 				$('#service-name').val(doc.name);
 				$('#service-price').val(doc.price);
-				$(`input[name="model-price"][value="${doc.model_price}"]`).prop('checked', true);
+				$(`input[name="pricing-model"][value="${doc.model_price}"]`).prop('checked', true);
 				break;
 			case 'other':
 				$('#activity_descriptions-select').fadeIn();
@@ -105,7 +105,7 @@ function activateDocButtons(docs, activity_descriptions) {
 		}
 
 		// Populate description
-		$('#doc-description').val(doc.description);
+		$('#description').val(doc.description);
 	});
 }
 
@@ -388,7 +388,7 @@ $(document).ready(async function () {
 					: category_name === 'service'
 					? $('#service-name').val()
 					: undefined,
-			model_price: $('input[name="model-price"]:checked').val(),
+			model_price: $('input[name="pricing-model"]:checked').val(),
 			price:
 				category_name === 'product'
 					? $('#product-price').val()
