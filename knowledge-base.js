@@ -81,7 +81,7 @@ function resetDocs(docs, activity_descriptions, docs_list_id = 'products') {
 	$('#doc-list').empty();
 	$('#doc-list').hide();
 
-	console.log(docs);
+	docs = docs.map((doc, index) => ({ ...doc, index }));
 
 	// Filter products (activity_description_index = 0)
 	if (docs_list_id === 'products') {
@@ -105,14 +105,13 @@ function resetDocs(docs, activity_descriptions, docs_list_id = 'products') {
 
 	console.log(docs);
 
-	if (docs.length <= 1) {
+	if (docs.length < 1) {
 		$('#doc-list').append(`<div class="doc-button disabled temp">${empty_text}</div>`);
 	} else {
 		docs.forEach((doc, index) => {
-			if (index === 0) return;
 			$('#doc-list').append(
-				`<div class="doc-button" id="${doc.activity_description_index.toString()}"><img src="https://uploads-ssl.webflow.com/64773d761bc76753239357f0/64b3ee5171c9469766a2c07f_document.svg" loading="eager" alt="" class="doc-icon"><div class="truncate">${
-					doc.category.description.pt
+				`<div class="doc-button" id="${doc.index.toString()}"><img src="https://uploads-ssl.webflow.com/64773d761bc76753239357f0/64b3ee5171c9469766a2c07f_document.svg" loading="eager" alt="" class="doc-icon"><div class="truncate">${
+					doc.name ? doc.name : 'Sem título'
 				}</div></div>`
 			);
 		});
