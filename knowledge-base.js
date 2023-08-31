@@ -123,19 +123,19 @@ function resetDocs(docs, activity_descriptions, docs_list_id = 'products') {
 
 	// Filter products (activity_description_index = 0)
 	if (docs_list_id === 'products') {
-		filtered_docs = docs.filter((doc) => doc.category.name === 'product');
+		filtered_docs = filtered_docs.filter((doc) => doc.category.name === 'product');
 		empty_text = 'Nenhum produto cadastrado';
 	}
 
 	// Filter services (activity_description_index = 1)
 	if (docs_list_id === 'services') {
-		filtered_docs = docs.filter((doc) => doc.category.name === 'service');
+		filtered_docs = filtered_docs.filter((doc) => doc.category.name === 'service');
 		empty_text = 'Nenhum serviço cadastrado';
 	}
 
 	// Filter others (activity_description_index > 1)
 	if (docs_list_id === 'others') {
-		filtered_docs = docs.filter(
+		filtered_docs = filtered_docs.filter(
 			(doc) => doc.category.name === 'other' || doc.category.name === 'appointment'
 		);
 		empty_text = 'Nenhum conteúdo cadastrado';
