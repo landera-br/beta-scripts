@@ -81,23 +81,23 @@ function resetDocs(docs, activity_descriptions, docs_list_id = 'products') {
 	$('#doc-list').empty();
 	$('#doc-list').hide();
 
-	console.log(docs);
-
 	// Filter products (activity_description_index = 0)
 	if (docs_list_id === 'products') {
-		docs = docs.filter((doc) => doc.activity_description_index === 0);
+		docs = docs.filter((doc) => doc.category.name === 'product');
 		empty_text = 'Nenhum produto cadastrado';
 	}
 
 	// Filter services (activity_description_index = 1)
 	if (docs_list_id === 'services') {
-		docs = docs.filter((doc) => doc.activity_description_index === 1);
+		docs = docs.filter((doc) => doc.category.name === 'service');
 		empty_text = 'Nenhum serviço cadastrado';
 	}
 
 	// Filter others (activity_description_index > 1)
 	if (docs_list_id === 'others') {
-		docs = docs.filter((doc) => doc.activity_description_index > 1);
+		docs = docs.filter(
+			(doc) => doc.category.name === 'other' || doc.category.name === 'appointment'
+		);
 		empty_text = 'Nenhum conteúdo cadastrado';
 	}
 
@@ -142,9 +142,6 @@ $(document).ready(async function () {
 	}
 
 	let docs = org.docs;
-
-	console.log('Aqui');
-	console.log(docs);
 
 	// Get activities by ID
 	try {
