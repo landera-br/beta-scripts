@@ -158,7 +158,7 @@ function resetDocs(
 					break;
 				case 'service':
 					doc_icon =
-						'https://uploads-ssl.webflow.com/64773d761bc76753239357f0/64f093cf4b91eb75b19789dc_megaphone.svg';
+						'https://uploads-ssl.webflow.com/64773d761bc76753239357f0/64f0d48ef824837f11d1d675_map.svg';
 					break;
 				case 'other':
 					doc_icon =
