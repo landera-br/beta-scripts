@@ -116,8 +116,6 @@ function resetDocs(
 ) {
 	let empty_text = 'Nenhum produto cadastrado';
 
-	console.log(docs_list_id);
-
 	$('#save-doc').val('Salvar conteúdo');
 	$('#doc-form-wrapper').hide();
 	$('#dashboard-placeholder').css('display', 'flex');
@@ -353,7 +351,7 @@ $(document).ready(async function () {
 
 		$('#save-doc').val('Salvando...');
 
-		const activity_description = $('li.selected.activity-description').data('value');
+		const activity_description_index = $('li.selected.description').data('value');
 
 		// Validate fields
 		if (!$('#description').val() && !$('#appointment').val()) {
@@ -362,9 +360,7 @@ $(document).ready(async function () {
 			return;
 		} else {
 			// Get corresponding activity_description from activity_descriptions
-			activity_description_data = activity_descriptions.find(
-				(description) => description.pt === activity_description
-			);
+			activity_description_data = activity_descriptions[activity_description_index];
 		}
 
 		const docs_list_id = $('.tab-link.w--current').attr('id');
