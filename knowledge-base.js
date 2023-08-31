@@ -49,7 +49,7 @@ function activateDocButtons(docs, activity_descriptions) {
 				// Populate service data
 				$('#service-name').val(doc.name);
 				$('#service-price').val(doc.price);
-				$(`input[name="pricing-model"][value="${doc.model_price}"]`).prop('checked', true);
+				$(`input[name="pricing-model"][value="${doc.pricing_model}"]`).prop('checked', true);
 				break;
 			case 'other':
 				$('#activity_descriptions-select').fadeIn();
@@ -222,6 +222,7 @@ $(document).ready(async function () {
 	}
 
 	// Populate organization section
+	$('#single').prop('checked', true);
 	$('#org-name').text(org.name);
 	$('#unit-address').text(org.unit_address);
 	$('.org-section').fadeIn();
@@ -410,7 +411,7 @@ $(document).ready(async function () {
 					: category_name === 'service'
 					? $('#service-name').val()
 					: undefined,
-			model_price: $('input[name="pricing-model"]:checked').val(),
+			pricing_model: $('input[name="pricing-model"]:checked').val(),
 			price:
 				category_name === 'product'
 					? $('#product-price').val()
