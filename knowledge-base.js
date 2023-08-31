@@ -113,6 +113,8 @@ function resetDocs(docs, activity_descriptions) {
 	let empty_text = 'Nenhum produto cadastrado';
 	const docs_list_id = $('.tab-link.w--current').attr('id');
 
+	console.log(docs_list_id);
+
 	$('#save-doc').val('Salvar conteúdo');
 	$('#doc-form-wrapper').hide();
 	$('#dashboard-placeholder').css('display', 'flex');
