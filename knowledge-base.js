@@ -313,7 +313,10 @@ $(document).ready(async function () {
 		activateDocButtons(docs, activity_descriptions);
 
 		// Make button selected
+		console.log('Removi selected');
 		$('.doc-button').removeClass('selected');
+		console.log(`Adicionei selected a ${docs.length + 1}`);
+		console.log(docs);
 		$(`#${docs.length + 1}`).addClass('selected');
 	});
 
