@@ -145,8 +145,32 @@ function resetDocs(docs, activity_descriptions, docs_list_id = 'products') {
 		$('#doc-list').append(`<div class="doc-button disabled temp">${empty_text}</div>`);
 	} else {
 		filtered_docs.forEach((doc, index) => {
+			let doc_icon = '';
+
+			switch (doc.category.name) {
+				case 'product':
+					doc_icon =
+						'https://uploads-ssl.webflow.com/64773d761bc76753239357f0/64f093a6c377542181aac259_cube.svg';
+					break;
+				case 'service':
+					doc_icon =
+						'https://uploads-ssl.webflow.com/64773d761bc76753239357f0/64f093cf4b91eb75b19789dc_megaphone.svg';
+					break;
+				case 'other':
+					doc_icon =
+						'https://uploads-ssl.webflow.com/64773d761bc76753239357f0/64f09488f55de927379dee60_document.svg';
+					break;
+				case 'appointment':
+					doc_icon =
+						'https://uploads-ssl.webflow.com/64773d761bc76753239357f0/64f0961f765d8fd565af3634_calendar.svg';
+					break;
+				default:
+					doc_icon =
+						'https://uploads-ssl.webflow.com/64773d761bc76753239357f0/64f09488f55de927379dee60_document.svg';
+					break;
+			}
 			$('#doc-list').append(
-				`<div class="doc-button" id="${doc.index.toString()}"><img src="https://uploads-ssl.webflow.com/64773d761bc76753239357f0/64b3ee5171c9469766a2c07f_document.svg" loading="eager" alt="" class="doc-icon"><div class="truncate">${
+				`<div class="doc-button" id="${doc.index.toString()}"><img src="${doc_icon}" loading="eager" alt="" class="doc-icon"><div class="truncate">${
 					doc.name ? doc.name : 'Sem título'
 				}</div></div>`
 			);
