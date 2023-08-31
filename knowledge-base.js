@@ -124,7 +124,7 @@ function resetDocs(docs, activity_descriptions, docs_list_id = 'products') {
 	$('#doc-list').empty();
 	$('#doc-list').hide();
 
-	let filtered_docs = docs.slice().map((doc, index) => ({ ...doc, index }));
+	let filtered_docs = [].concat(docs).map((doc, index) => ({ ...doc, index }));
 
 	// Filter products (activity_description_index = 0)
 	if (docs_list_id === 'products') {
