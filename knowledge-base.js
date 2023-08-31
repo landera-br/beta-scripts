@@ -20,7 +20,12 @@ function activateDocButtons(docs, activity_descriptions) {
 
 		const doc_index = parseInt($(this).attr('id'));
 
+		console.log(docs);
+		console.log(doc_index);
+
 		doc = docs[doc_index];
+
+		console.log(doc);
 
 		$('#dashboard-placeholder').hide();
 		$('#doc-form-wrapper').fadeIn();
