@@ -313,10 +313,8 @@ $(document).ready(async function () {
 		activateDocButtons(docs, activity_descriptions);
 
 		// Make button selected
-		$(`#${docs.length + 1}`)
-			.addClass('selected')
-			.siblings()
-			.removeClass('selected');
+		$('.doc-button').removeClass('selected');
+		$(`#${docs.length + 1}`).addClass('selected');
 	});
 
 	$('#save-doc').click(async function (event) {
