@@ -109,9 +109,12 @@ function activateDocButtons(docs, activity_descriptions) {
 	});
 }
 
-function resetDocs(docs, activity_descriptions) {
+function resetDocs(
+	docs,
+	activity_descriptions,
+	docs_list_id = $('.tab-link.w--current').attr('id')
+) {
 	let empty_text = 'Nenhum produto cadastrado';
-	const docs_list_id = $('.tab-link.w--current').attr('id');
 
 	console.log(docs_list_id);
 
@@ -265,7 +268,7 @@ $(document).ready(async function () {
 				break;
 		}
 
-		resetDocs(docs, activity_descriptions);
+		resetDocs(docs, activity_descriptions, $(this).attr('id'));
 	});
 
 	$('.add-doc').click(function () {
