@@ -222,7 +222,6 @@ $(document).ready(async function () {
 	}
 
 	// Populate organization section
-	$('#single').prop('checked', true);
 	$('#org-name').text(org.name);
 	$('#unit-address').text(org.unit_address);
 	$('.org-section').fadeIn();
@@ -286,6 +285,7 @@ $(document).ready(async function () {
 
 		// Populate activity_descriptions
 		$('.list:first').empty();
+		$('#single').prop('checked', true);
 
 		// Get selected tab
 		const docs_list_id = $('.tab-link.w--current').attr('id');
