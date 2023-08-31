@@ -175,7 +175,11 @@ function resetDocs(
 			}
 			$('#doc-list').append(
 				`<div class="doc-button" id="${doc.index.toString()}"><img src="${doc_icon}" loading="eager" alt="" class="doc-icon"><div class="truncate">${
-					doc.name ? doc.name : 'Sem título'
+					doc.name
+						? doc.name
+						: doc.category.description.pt
+						? doc.category.description.pt
+						: 'Documento'
 				}</div></div>`
 			);
 		});
@@ -287,7 +291,9 @@ $(document).ready(async function () {
 
 		// Populate activity_descriptions
 		$('.list:first').empty();
-		$('#single').prop('checked', true);
+		if ($('.tab-link.w--current').attr('id') === 'services') {
+			$('#single').prop('checked', true);
+		}
 
 		// Get selected tab
 		const docs_list_id = $('.tab-link.w--current').attr('id');
