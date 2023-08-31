@@ -20,12 +20,7 @@ function activateDocButtons(docs, activity_descriptions) {
 
 		const doc_index = parseInt($(this).attr('id'));
 
-		console.log(docs);
-		console.log(doc_index);
-
 		doc = docs[doc_index];
-
-		console.log(doc);
 
 		$('#dashboard-placeholder').hide();
 		$('#doc-form-wrapper').fadeIn();
@@ -124,14 +119,7 @@ function resetDocs(docs, activity_descriptions, docs_list_id = 'products') {
 	$('#doc-list').empty();
 	$('#doc-list').hide();
 
-	// test
-	$('#doc-list').append(
-		`<div class="doc-button" id="1"><img src="https://uploads-ssl.webflow.com/64773d761bc76753239357f0/64b3ee5171c9469766a2c07f_document.svg" loading="eager" alt="" class="doc-icon"><div class="truncate">${'Sem título'}</div></div>`
-	);
-
-	return;
-
-	let filtered_docs = docs.map((doc, index) => Object.assign({}, doc, { index }));
+	let filtered_docs = docs.map((doc, index) => ({ ...doc, index }));
 
 	// Filter products (activity_description_index = 0)
 	if (docs_list_id === 'products') {
@@ -166,7 +154,7 @@ function resetDocs(docs, activity_descriptions, docs_list_id = 'products') {
 	}
 	$('#doc-list').fadeIn();
 
-	activateDocButtons(filtered_docs, activity_descriptions);
+	activateDocButtons(docs, activity_descriptions);
 }
 
 // Handle page actions
