@@ -5,6 +5,10 @@ $(document).ready(function () {
 const BACKEND_URL = 'https://beta-backend-7ikj4ovbfa-uc.a.run.app/api/v1';
 
 // Support functions
+function isDescriptionInDocs(description) {
+	return docs.some((doc) => doc.category?.description?.pt === description.pt);
+}
+
 function activateDocButtons(docs, activity_descriptions) {
 	$('.org-button').click(function () {
 		const urlParams = new URLSearchParams(window.location.search);
@@ -57,19 +61,6 @@ function activateDocButtons(docs, activity_descriptions) {
 				// Populate activity_descriptions
 				$('.list:first').empty();
 
-				// for (let i = 0; i < activity_descriptions.length; i++) {
-				// 	// Append if activity_descriptions[i] is not in doc.category.description
-				// 	if (!docs.find((doc) => doc.activity_description_index === i)) {
-				// 		$('.list:first').append(
-				// 			`<li data-value="${i}" class="option description truncate">${activity_descriptions[i].pt}</li>`
-				// 		);
-				// 	}
-				// }
-
-				function isDescriptionInDocs(description) {
-					return docs.some((doc) => doc.category?.description?.pt === description.pt);
-				}
-
 				// Iterate through activity_descriptions and append if not in docs
 				activity_descriptions.forEach((description, index) => {
 					if (!isDescriptionInDocs(description)) {
@@ -78,7 +69,7 @@ function activateDocButtons(docs, activity_descriptions) {
 					}
 				});
 
-				// Append selected option
+				// Prepend selected option
 				$('.list:first').append(
 					`<li data-value="${doc_index}" class="option description truncate selected">${
 						doc?.category?.description?.pt || ''
@@ -87,6 +78,8 @@ function activateDocButtons(docs, activity_descriptions) {
 
 				// Update the selected option
 				const option = activity_descriptions[doc_index].pt;
+				console.log(doc_index);
+				console.log(option);
 				$('.current:first').text(option);
 
 				// Set the option value
@@ -336,15 +329,13 @@ $(document).ready(async function () {
 			$('.service-grid').hide();
 			$('.other-grid').fadeIn();
 
-			// Populate activity_descriptions
-			for (let i = 0; i < activity_descriptions.length; i++) {
-				// Append if the current index is not in the docs array
-				if (!docs.find((doc) => doc.activity_description_index === i) && i !== 0 && i !== 1) {
-					$('.list:first').append(
-						`<li data-value="${i}" class="option description truncate">${activity_descriptions[i].pt}</li>`
-					);
+			// Iterate through activity_descriptions and append if not in docs
+			activity_descriptions.forEach((description, index) => {
+				if (!isDescriptionInDocs(description)) {
+					let listItem = `<li data-value="${index}" class="option description truncate">${description.pt}</li>`;
+					$('.list:first').append(listItem);
 				}
-			}
+			});
 		}
 
 		$('.current:first').text('Selecione um assunto');
