@@ -52,6 +52,7 @@ function activateDocButtons(docs, activity_descriptions) {
 				$(`input[name="pricing-model"][value="${doc.pricing_model}"]`).prop('checked', true);
 				break;
 			case 'other':
+				console.log('Entrou other');
 				$('#activity_descriptions-select').fadeIn();
 
 				// Populate activity_descriptions
@@ -68,10 +69,8 @@ function activateDocButtons(docs, activity_descriptions) {
 
 				// Append selected option
 				$('.list:first').append(
-					`<li data-value="${
-						doc.activity_description_index
-					}" class="option description truncate selected">${
-						activity_descriptions[doc.activity_description_index].pt
+					`<li data-value="${doc_index}" class="option description truncate selected">${
+						doc?.category?.description?.pt ? doc?.category?.description?.pt : ''
 					}</li>`
 				);
 
