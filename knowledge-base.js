@@ -5,7 +5,7 @@ $(document).ready(function () {
 const BACKEND_URL = 'https://beta-backend-7ikj4ovbfa-uc.a.run.app/api/v1';
 
 // Support functions
-function isDescriptionInDocs(description) {
+function isDescriptionInDocs(docs, description) {
 	return docs.some((doc) => doc.category?.description?.pt === description.pt);
 }
 
@@ -63,7 +63,7 @@ function activateDocButtons(docs, activity_descriptions) {
 
 				// Iterate through activity_descriptions and append if not in docs
 				activity_descriptions.forEach((description, index) => {
-					if (!isDescriptionInDocs(description)) {
+					if (!isDescriptionInDocs(docs, description)) {
 						let listItem = `<li data-value="${index}" class="option description truncate">${description.pt}</li>`;
 						$('.list:first').append(listItem);
 					}
@@ -331,7 +331,7 @@ $(document).ready(async function () {
 
 			// Iterate through activity_descriptions and append if not in docs
 			activity_descriptions.forEach((description, index) => {
-				if (!isDescriptionInDocs(description)) {
+				if (!isDescriptionInDocs(docs, description)) {
 					let listItem = `<li data-value="${index}" class="option description truncate">${description.pt}</li>`;
 					$('.list:first').append(listItem);
 				}
