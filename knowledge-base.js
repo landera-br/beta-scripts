@@ -127,20 +127,20 @@ function resetDocs(
 
 	// Filter products (activity_description_index = 0)
 	if (docs_list_id === 'products') {
-		filtered_docs = filtered_docs.filter((doc) => doc.category.name === 'product');
+		filtered_docs = filtered_docs.filter((doc) => doc?.category?.name === 'product');
 		empty_text = 'Nenhum produto cadastrado';
 	}
 
 	// Filter services (activity_description_index = 1)
 	if (docs_list_id === 'services') {
-		filtered_docs = filtered_docs.filter((doc) => doc.category.name === 'service');
+		filtered_docs = filtered_docs.filter((doc) => doc?.category?.name === 'service');
 		empty_text = 'Nenhum serviço cadastrado';
 	}
 
 	// Filter others (activity_description_index > 1)
 	if (docs_list_id === 'others') {
 		filtered_docs = filtered_docs.filter(
-			(doc) => doc.category.name === 'other' || doc.category.name === 'appointment'
+			(doc) => doc?.category?.name === 'other' || doc?.category?.name === 'appointment'
 		);
 		empty_text = 'Nenhum conteúdo cadastrado';
 	}
@@ -151,7 +151,7 @@ function resetDocs(
 		filtered_docs.forEach((doc, index) => {
 			let doc_icon = '';
 
-			switch (doc.category.name) {
+			switch (doc?.category?.name) {
 				case 'product':
 					doc_icon =
 						'https://uploads-ssl.webflow.com/64773d761bc76753239357f0/64f093a6c377542181aac259_cube.svg';
@@ -177,8 +177,8 @@ function resetDocs(
 				`<div class="doc-button" id="${doc.index.toString()}"><img src="${doc_icon}" loading="eager" alt="" class="doc-icon"><div class="truncate">${
 					doc.name
 						? doc.name
-						: doc.category.description.pt
-						? doc.category.description.pt
+						: doc?.category?.description?.pt
+						? doc?.category?.description?.pt
 						: 'Documento'
 				}</div></div>`
 			);

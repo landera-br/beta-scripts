@@ -1,132 +1,132 @@
 <!-- Handle dynamic input fields -->
 <script>
-  $(document).ready(async function () {
-    let user = null;
+	$(document).ready(async function () {
+		let user = null;
 
-    if (!Cookies.get('fb_token') || !Cookies.get('fb_uid')) {
-      window.location.href = '/';
-    }
+		if (!Cookies.get('fb_token') || !Cookies.get('fb_uid')) {
+			window.location.href = '/';
+		}
 
-    try {
-      user = await fetch(`https://beta-backend-7ikj4ovbfa-uc.a.run.app/api/v1/users`, {
-        method: 'GET',
-        headers: { Authorization: `Bearer ${Cookies.get('fb_token')}` },
-      });
+		try {
+			user = await fetch(`https://beta-backend-7ikj4ovbfa-uc.a.run.app/api/v1/users`, {
+				method: 'GET',
+				headers: { Authorization: `Bearer ${Cookies.get('fb_token')}` },
+			});
 
-      if (user.status == 200) {
-        user = await user.json();
-      } else {
-        throw new Error();
-      }
-    } catch (error) {
-      alert('Ocorreu um erro ao ler dados do usuário.');
-      Cookies.remove('fb_token');
-      Cookies.remove('fb_uid');
-      window.location.href = '/';
-    }
+			if (user.status == 200) {
+				user = await user.json();
+			} else {
+				throw new Error();
+			}
+		} catch (error) {
+			alert('Ocorreu um erro ao ler dados do usuário.');
+			Cookies.remove('fb_token');
+			Cookies.remove('fb_uid');
+			window.location.href = '/';
+		}
 
-    if (user.active_units >= user.subscription.quantity) {
-      alert(
-        'Você atingiu o limite de unidades para o seu plano. Faça upgrade para adicionar mais unidades.'
-      );
-      window.location.href = window.location.origin + '/#plans';
-    }
+		if (user.active_units >= user.subscription.quantity) {
+			alert(
+				'Você atingiu o limite de unidades para o seu plano. Faça upgrade para adicionar mais unidades.'
+			);
+			window.location.href = window.location.origin + '/#plans';
+		}
 
-    // Add event listener to `add-address` link
-    $('#add-region').click(function () {
-      // Add input above the link
-      $('#add-region').before(
-        '<div class="input-addon-field"><input type="text" class="input-field addon w-input region" maxlength="256" name="added-region" data-name="added-region" placeholder="São Paulo"><img src="https://uploads-ssl.webflow.com/64773d761bc76753239357f0/64a7f9e83b57d3e024ec85ea_x-mark.svg" loading="lazy" alt="" class="delete-field-icon"></div>'
-      );
+		// Add event listener to `add-address` link
+		$('#add-region').click(function () {
+			// Add input above the link
+			$('#add-region').before(
+				'<div class="input-addon-field"><input type="text" class="input-field addon w-input region" maxlength="256" name="added-region" data-name="added-region" placeholder="São Paulo"><img src="https://uploads-ssl.webflow.com/64773d761bc76753239357f0/64a7f9e83b57d3e024ec85ea_x-mark.svg" loading="lazy" alt="" class="delete-field-icon"></div>'
+			);
 
-      $('.delete-field-icon').click(function () {
-        $(this).parent().remove();
-      });
-    });
+			$('.delete-field-icon').click(function () {
+				$(this).parent().remove();
+			});
+		});
 
-    // Check input radio
-    $('#radio-automatic-region').prop('checked', true);
+		// Check input radio
+		$('#radio-automatic-region').prop('checked', true);
 
-    // Radio button event listener
-    $('input[type=radio][name=region]').change(function () {
-      if (this.value == 'manual') {
-        $('.regions-block').show();
-      } else {
-        $('.regions-block').hide();
+		// Radio button event listener
+		$('input[type=radio][name=region]').change(function () {
+			if (this.value == 'manual') {
+				$('.regions-block').show();
+			} else {
+				$('.regions-block').hide();
 
-        // Clear all input fields with class .region
-        $('.region').each(function () {
-          $(this).val('');
-        });
+				// Clear all input fields with class .region
+				$('.region').each(function () {
+					$(this).val('');
+				});
 
-        // Remove all inputs with name added-region
-        $('input[name=added-region]').each(function () {
-          $(this).parent().remove();
-        });
-      }
-    });
-  });
+				// Remove all inputs with name added-region
+				$('input[name=added-region]').each(function () {
+					$(this).parent().remove();
+				});
+			}
+		});
+	});
 </script>
 <!-- Handle form submission -->
 <script>
-  $(document).ready(async function () {
-    // Fade in page with flex
-    $('#container').css('display', 'flex').hide().fadeIn();
-  });
+	$(document).ready(async function () {
+		// Fade in page with flex
+		$('#container').css('display', 'flex').hide().fadeIn();
+	});
 
-  // Get org_id from URL params
-  const urlParams = new URLSearchParams(window.location.search);
-  const org_id = urlParams.get('org_id');
+	// Get org_id from URL params
+	const urlParams = new URLSearchParams(window.location.search);
+	const org_id = urlParams.get('org_id');
 
-  // Add event listener to the confirm button
-  var fb_token = Cookies.get('fb_token');
-  var fb_uid = Cookies.get('fb_uid');
-  var confirmation_button = $('#confirmation-button');
-  var form = $('#create-org-form');
+	// Add event listener to the confirm button
+	var fb_token = Cookies.get('fb_token');
+	var fb_uid = Cookies.get('fb_uid');
+	var confirmation_button = $('#confirmation-button');
+	var form = $('#create-org-form');
 
-  form.submit(async function (event) {
-    event.preventDefault();
-    confirmation_button.val('Adicionando...');
-    confirmation_button.attr('disabled', true);
+	form.submit(async function (event) {
+		event.preventDefault();
+		confirmation_button.val('Adicionando...');
+		confirmation_button.attr('disabled', true);
 
-    let address = $('#address').val();
-    let payload = {};
+		let address = $('#address').val();
+		let payload = {};
 
-    if ($('#radio-manual-region').is(':checked')) {
-      regions = $('.region')
-        .map(function () {
-          return $(this).val();
-        })
-        .get();
+		if ($('#radio-manual-region').is(':checked')) {
+			regions = $('.region')
+				.map(function () {
+					return $(this).val();
+				})
+				.get();
 
-      payload = { org_id, address, regions };
-    } else {
-      payload = { org_id, address };
-    }
+			payload = { org_id, address, regions, region_mode: 'manual' };
+		} else {
+			payload = { org_id, address, region_mode: 'automatic' };
+		}
 
-    try {
-      response = await fetch(`https://beta-backend-7ikj4ovbfa-uc.a.run.app/api/v1/units`, {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${fb_token}`,
-        },
-        body: JSON.stringify(payload),
-      });
+		try {
+			response = await fetch(`https://beta-backend-7ikj4ovbfa-uc.a.run.app/api/v1/units`, {
+				method: 'POST',
+				headers: {
+					Accept: 'application/json',
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${fb_token}`,
+				},
+				body: JSON.stringify(payload),
+			});
 
-      if (response.status == 201) {
-        window.location.href = '/my-business';
-      } else {
-        throw new Error();
-      }
-    } catch (error) {
-      alert(
-        'Ocorreu um erro ao cadastrar unidade. Revise os dados do formulário ou tente novamente mais tarde.'
-      );
-      confirmation_button.val('Adicionar unidade');
-      confirmation_button.attr('disabled', false);
-      return;
-    }
-  });
+			if (response.status == 201) {
+				window.location.href = '/my-business';
+			} else {
+				throw new Error();
+			}
+		} catch (error) {
+			alert(
+				'Ocorreu um erro ao cadastrar unidade. Revise os dados do formulário ou tente novamente mais tarde.'
+			);
+			confirmation_button.val('Adicionar unidade');
+			confirmation_button.attr('disabled', false);
+			return;
+		}
+	});
 </script>
