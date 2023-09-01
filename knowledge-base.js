@@ -69,7 +69,7 @@ function activateDocButtons(docs, activity_descriptions) {
 					}
 				});
 
-				// Prepend selected option
+				// Append selected option
 				$('.list:first').append(
 					`<li data-value="${doc_index}" class="option description truncate selected">${
 						doc?.category?.description?.pt || ''
@@ -78,8 +78,6 @@ function activateDocButtons(docs, activity_descriptions) {
 
 				// Update the selected option
 				const option = activity_descriptions[doc_index].pt;
-				console.log(doc_index);
-				console.log(option);
 				$('.current:first').text(option);
 
 				// Set the option value
@@ -147,6 +145,9 @@ function resetDocs(
 		);
 		empty_text = 'Nenhum conteúdo cadastrado';
 	}
+
+	console.log('filtered_docs:');
+	console.log(filtered_docs);
 
 	if (filtered_docs.length < 1) {
 		$('#doc-list').append(`<div class="doc-button disabled temp">${empty_text}</div>`);
