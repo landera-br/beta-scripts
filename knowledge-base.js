@@ -77,8 +77,7 @@ function activateDocButtons(docs, activity_descriptions) {
 				);
 
 				// Update the selected option
-				// const option = activity_descriptions[xxx].pt;
-				// $('.current:first').text(option);
+				$('.current:first').text(doc?.category?.description?.pt || 'Selecione um assunto');
 
 				// Check if doc.category.name is appointment
 				if (doc.category.name === 'appointment') {
