@@ -361,6 +361,8 @@ $(document).ready(async function () {
 			activity_description_data = activity_descriptions.find(
 				(description) => description.pt === activity_description_pt
 			);
+
+			delete activity_description_data._id;
 		}
 
 		const docs_list_id = $('.tab-link.w--current').attr('id');
