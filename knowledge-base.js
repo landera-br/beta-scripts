@@ -64,27 +64,21 @@ function activateDocButtons(docs, activity_descriptions) {
 				// Iterate through activity_descriptions and append if not in docs
 				activity_descriptions.forEach((description, index) => {
 					if (!isDescriptionInDocs(docs, description)) {
-						let listItem = `<li data-value="${index}" class="option description truncate">${description.pt}</li>`;
+						let listItem = `<li class="option description truncate">${description.pt}</li>`;
 						$('.list:first').append(listItem);
 					}
 				});
 
-				// Append selected option
-				$('.list:first').append(
-					`<li data-value="${doc_index}" class="option description truncate selected">${
+				// Prepend selected option
+				$('.list:first').prepend(
+					`<li class="option description truncate selected">${
 						doc?.category?.description?.pt || ''
 					}</li>`
 				);
 
 				// Update the selected option
-				const option = activity_descriptions[doc_index].pt;
-				$('.current:first').text(option);
-
-				// Set the option value
-				$('li.option.activity-description').click(function () {
-					const value = $(this).attr('data-value');
-					$('#description-index').val(value);
-				});
+				// const option = activity_descriptions[xxx].pt;
+				// $('.current:first').text(option);
 
 				// Check if doc.category.name is appointment
 				if (doc.category.name === 'appointment') {
@@ -145,9 +139,6 @@ function resetDocs(
 		);
 		empty_text = 'Nenhum conteúdo cadastrado';
 	}
-
-	console.log('filtered_docs:');
-	console.log(filtered_docs);
 
 	if (filtered_docs.length < 1) {
 		$('#doc-list').append(`<div class="doc-button disabled temp">${empty_text}</div>`);
@@ -333,7 +324,7 @@ $(document).ready(async function () {
 			// Iterate through activity_descriptions and append if not in docs
 			activity_descriptions.forEach((description, index) => {
 				if (!isDescriptionInDocs(docs, description)) {
-					let listItem = `<li data-value="${index}" class="option description truncate">${description.pt}</li>`;
+					let listItem = `<li class="option description truncate">${description.pt}</li>`;
 					$('.list:first').append(listItem);
 				}
 			});
