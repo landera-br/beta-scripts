@@ -52,30 +52,41 @@ function activateDocButtons(docs, activity_descriptions) {
 				$(`input[name="pricing-model"][value="${doc.pricing_model}"]`).prop('checked', true);
 				break;
 			case 'other':
-				console.log('Entrou other');
 				$('#activity_descriptions-select').fadeIn();
 
 				// Populate activity_descriptions
 				$('.list:first').empty();
 
-				for (let i = 0; i < activity_descriptions.length; i++) {
-					// Append if the current index is not in the docs array
-					if (!docs.find((doc) => doc.activity_description_index === i)) {
-						$('.list:first').append(
-							`<li data-value="${i}" class="option description truncate">${activity_descriptions[i].pt}</li>`
-						);
-					}
+				// for (let i = 0; i < activity_descriptions.length; i++) {
+				// 	// Append if activity_descriptions[i] is not in doc.category.description
+				// 	if (!docs.find((doc) => doc.activity_description_index === i)) {
+				// 		$('.list:first').append(
+				// 			`<li data-value="${i}" class="option description truncate">${activity_descriptions[i].pt}</li>`
+				// 		);
+				// 	}
+				// }
+
+				function isDescriptionInDocs(description) {
+					return docs.some((doc) => doc.category?.description?.pt === description.pt);
 				}
+
+				// Iterate through activity_descriptions and append if not in docs
+				activity_descriptions.forEach((description, index) => {
+					if (!isDescriptionInDocs(description)) {
+						let listItem = `<li data-value="${index}" class="option description truncate">${description.pt}</li>`;
+						$('.list:first').append(listItem);
+					}
+				});
 
 				// Append selected option
 				$('.list:first').append(
 					`<li data-value="${doc_index}" class="option description truncate selected">${
-						doc?.category?.description?.pt ? doc?.category?.description?.pt : ''
+						doc?.category?.description?.pt || ''
 					}</li>`
 				);
 
 				// Update the selected option
-				const option = activity_descriptions[doc.activity_description_index].pt;
+				const option = activity_descriptions[doc_index].pt;
 				$('.current:first').text(option);
 
 				// Set the option value
@@ -124,19 +135,19 @@ function resetDocs(
 
 	let filtered_docs = docs.map((doc, index) => ({ ...doc, index }));
 
-	// Filter products (activity_description_index = 0)
+	// Filter products
 	if (docs_list_id === 'products') {
 		filtered_docs = filtered_docs.filter((doc) => doc?.category?.name === 'product');
 		empty_text = 'Nenhum produto cadastrado';
 	}
 
-	// Filter services (activity_description_index = 1)
+	// Filter services
 	if (docs_list_id === 'services') {
 		filtered_docs = filtered_docs.filter((doc) => doc?.category?.name === 'service');
 		empty_text = 'Nenhum serviço cadastrado';
 	}
 
-	// Filter others (activity_description_index > 1)
+	// Filter others
 	if (docs_list_id === 'others') {
 		filtered_docs = filtered_docs.filter(
 			(doc) => doc?.category?.name === 'other' || doc?.category?.name === 'appointment'
