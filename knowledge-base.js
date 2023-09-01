@@ -349,7 +349,7 @@ $(document).ready(async function () {
 
 		$('#save-doc').val('Salvando...');
 
-		const activity_description_index = $('li.selected.description').data('value');
+		const activity_description_pt = $('li.description.selected').text();
 
 		// Validate fields
 		if (!$('#description').val() && !$('#appointment').val()) {
@@ -358,7 +358,9 @@ $(document).ready(async function () {
 			return;
 		} else {
 			// Get corresponding activity_description from activity_descriptions
-			activity_description_data = activity_descriptions[activity_description_index];
+			activity_description_data = activity_descriptions.find(
+				(description) => description.pt === activity_description_pt
+			);
 		}
 
 		const docs_list_id = $('.tab-link.w--current').attr('id');
@@ -394,12 +396,7 @@ $(document).ready(async function () {
 				: docs.length + 1,
 			category: {
 				name: category_name,
-				description: activity_description_data
-					? {
-							en: activity_description_data ? activity_description_data.en : undefined,
-							pt: activity_description_data ? activity_description_data.pt : undefined,
-					  }
-					: undefined,
+				description: activity_description_data,
 			},
 			link: category_name === 'appointment' ? $('#appointment').val() : undefined,
 			description: category_name === 'appointment' ? undefined : $('#description').val(),
