@@ -350,22 +350,14 @@ $(document).ready(async function () {
 		$('#save-doc').val('Salvando...');
 
 		const activity_description_pt = $('li.description.selected').text();
+		const docs_list_id = $('.tab-link.w--current').attr('id');
 
 		// Validate fields
 		if (!$('#description').val() && !$('#appointment').val()) {
 			alert('Preencha todos os campos!');
 			$('#save-doc').val('Salvar conteúdo');
 			return;
-		} else {
-			// Get corresponding activity_description from activity_descriptions
-			activity_description_data = activity_descriptions.find(
-				(description) => description.pt === activity_description_pt
-			);
-
-			delete activity_description_data._id;
 		}
-
-		const docs_list_id = $('.tab-link.w--current').attr('id');
 
 		switch (docs_list_id) {
 			case 'products':
@@ -375,6 +367,13 @@ $(document).ready(async function () {
 				category_name = 'service';
 				break;
 			case 'others':
+				// Get corresponding activity_description from activity_descriptions
+				activity_description_data = activity_descriptions.find(
+					(description) => description.pt === activity_description_pt
+				);
+
+				delete activity_description_data._id;
+
 				if (!activity_description_data) {
 					alert('Por favor, selecione um assunto!');
 					$('#save-doc').val('Salvar conteúdo');
