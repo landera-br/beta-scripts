@@ -399,20 +399,21 @@ $(document).ready(async function () {
 				name: category_name,
 				description: activity_description_data,
 			},
-			link: category_name === 'appointment' ? $('#appointment').val() : undefined,
-			description: category_name === 'appointment' ? undefined : $('#description').val(),
+			link: category_name === 'appointment' ? $('#appointment').val() || undefined : undefined,
+			description:
+				category_name === 'appointment' ? undefined : $('#description').val() || undefined,
 			name:
 				category_name === 'product'
-					? $('#product-name').val()
+					? $('#product-name').val() || undefined
 					: category_name === 'service'
-					? $('#service-name').val()
+					? $('#service-name').val() || undefined
 					: undefined,
-			pricing_model: $('input[name="pricing-model"]:checked').val(),
+			pricing_model: $('input[name="pricing-model"]:checked').val() || undefined,
 			price:
 				category_name === 'product'
-					? $('#product-price').val()
+					? $('#product-price').val() || undefined
 					: category_name === 'service'
-					? $('#service-price').val()
+					? $('#service-price').val() || undefined
 					: undefined,
 			currency: 'BRL',
 		};
