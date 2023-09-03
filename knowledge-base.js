@@ -37,7 +37,9 @@ function activateDocButtons(docs, activity_descriptions) {
 				$('.product-service-grid').fadeIn();
 				$('.other-grid').hide();
 
-				// Populate product data
+				console.log(doc);
+
+				// Populate product/service data
 				$('#item-name').val(doc.name);
 				$('#item-price').val(doc.price);
 				break;
