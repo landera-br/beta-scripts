@@ -29,6 +29,8 @@ function activateDocButtons(docs, activity_descriptions) {
 		$('#dashboard-placeholder').hide();
 		$('#doc-form-wrapper').fadeIn();
 
+		console.log(doc.category.name);
+
 		switch (doc.category.name) {
 			case 'product' || 'service':
 				$('#dashboard-heading').text('Editar produto/serviço');
@@ -36,8 +38,6 @@ function activateDocButtons(docs, activity_descriptions) {
 
 				$('.product-service-grid').fadeIn();
 				$('.other-grid').hide();
-
-				console.log(doc);
 
 				// Populate product/service data
 				$('#item-name').val(doc.name);
