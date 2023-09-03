@@ -30,30 +30,16 @@ function activateDocButtons(docs, activity_descriptions) {
 		$('#doc-form-wrapper').fadeIn();
 
 		switch (doc.category.name) {
-			case 'product':
-				$('#dashboard-heading').text('Editar produto');
+			case 'product' || 'service':
+				$('#dashboard-heading').text('Editar produto/serviço');
 				$('#activity_descriptions-select').hide();
 
-				$('.product-grid').fadeIn();
-				$('.service-grid').hide();
+				$('.product-service-grid').fadeIn();
 				$('.other-grid').hide();
 
 				// Populate product data
-				$('#product-name').val(doc.name);
-				$('#product-price').val(doc.price);
-				break;
-			case 'service':
-				$('#dashboard-heading').text('Editar serviço');
-				$('#activity_descriptions-select').hide();
-
-				$('.product-grid').hide();
-				$('.service-grid').fadeIn();
-				$('.other-grid').hide();
-
-				// Populate service data
-				$('#service-name').val(doc.name);
-				$('#service-price').val(doc.price);
-				$(`input[name="pricing-model"][value="${doc.pricing_model}"]`).prop('checked', true);
+				$('#item-name').val(doc.name);
+				$('#item-price').val(doc.price);
 				break;
 			case 'other':
 				$('#activity_descriptions-select').fadeIn();
@@ -92,8 +78,7 @@ function activateDocButtons(docs, activity_descriptions) {
 					$('#description').val(doc.description);
 				}
 
-				$('.product-grid').hide();
-				$('.service-grid').hide();
+				$('.product-service-grid').hide();
 				$('.other-grid').fadeIn();
 				break;
 		}
@@ -108,8 +93,6 @@ function resetDocs(
 	activity_descriptions,
 	docs_list_id = $('.tab-link.w--current').attr('id')
 ) {
-	let empty_text = 'Nenhum produto cadastrado';
-
 	$('#save-doc').val('Salvar conteúdo');
 	$('#doc-form-wrapper').hide();
 	$('#dashboard-placeholder').css('display', 'flex');
@@ -120,15 +103,15 @@ function resetDocs(
 	let filtered_docs = docs.map((doc, index) => ({ ...doc, index }));
 
 	// Filter products
-	if (docs_list_id === 'products') {
-		filtered_docs = filtered_docs.filter((doc) => doc?.category?.name === 'product');
-		empty_text = 'Nenhum produto cadastrado';
+	if (docs_list_id === 'products-services') {
+		filtered_docs = filtered_docs.filter(
+			(doc) => doc?.category?.name === 'product' || doc?.category?.name === 'service'
+		);
 	}
 
 	// Filter services
 	if (docs_list_id === 'services') {
 		filtered_docs = filtered_docs.filter((doc) => doc?.category?.name === 'service');
-		empty_text = 'Nenhum serviço cadastrado';
 	}
 
 	// Filter others
@@ -136,11 +119,10 @@ function resetDocs(
 		filtered_docs = filtered_docs.filter(
 			(doc) => doc?.category?.name === 'other' || doc?.category?.name === 'appointment'
 		);
-		empty_text = 'Nenhum conteúdo cadastrado';
 	}
 
 	if (filtered_docs.length < 1) {
-		$('#doc-list').append(`<div class="doc-button disabled temp">${empty_text}</div>`);
+		$('#doc-list').append(`<div class="doc-button disabled temp">Nenhum conteúdo cadastrado</div>`);
 	} else {
 		filtered_docs.forEach((doc, index) => {
 			let doc_icon = '';
@@ -251,13 +233,9 @@ $(document).ready(async function () {
 		$('#save-doc').val('Salvar conteúdo');
 		$('#doc-form').trigger('reset');
 
-		// Get tab ID
 		switch ($(this).attr('id')) {
-			case 'products':
-				$('#btn-add-text').text('Cadastrar produto');
-				break;
-			case 'services':
-				$('#btn-add-text').text('Cadastrar serviço');
+			case 'products-services':
+				$('#btn-add-text').text('Cadastrar produto ou serviço');
 				break;
 			default:
 				$('#btn-add-text').text('Cadastrar conteúdo');
@@ -292,22 +270,11 @@ $(document).ready(async function () {
 		// Get selected tab
 		const docs_list_id = $('.tab-link.w--current').attr('id');
 
-		if (docs_list_id === 'products') {
-			$('#dashboard-heading').text('Cadastrar novo produto');
+		if (docs_list_id === 'products-services') {
+			$('#dashboard-heading').text('Cadastrar novo produto/serviço');
 			$('#activity_descriptions-select').hide();
 
-			$('.product-grid').fadeIn();
-			$('.service-grid').hide();
-			$('.other-grid').hide();
-		}
-
-		if (docs_list_id === 'services') {
-			// Update heading
-			$('#dashboard-heading').text('Cadastrar novo serviço');
-			$('#activity_descriptions-select').hide();
-
-			$('.product-grid').hide();
-			$('.service-grid').fadeIn();
+			$('.product-service-grid').fadeIn();
 			$('.other-grid').hide();
 		}
 
@@ -316,8 +283,7 @@ $(document).ready(async function () {
 			$('#dashboard-heading').text('Cadastrar novo conteúdo');
 			$('#activity_descriptions-select').fadeIn();
 
-			$('.product-grid').hide();
-			$('.service-grid').hide();
+			$('.product-service-grid').hide();
 			$('.other-grid').fadeIn();
 
 			// Iterate through activity_descriptions and append if not in docs
@@ -360,11 +326,12 @@ $(document).ready(async function () {
 		}
 
 		switch (docs_list_id) {
-			case 'products':
-				category_name = 'product';
-				break;
-			case 'services':
-				category_name = 'service';
+			case 'products-services':
+				if ($('input[name="item-category"]:checked').val() === 'product') {
+					category_name = 'product';
+				} else {
+					category_name = 'service';
+				}
 				break;
 			case 'others':
 				// Get corresponding activity_description from activity_descriptions
@@ -403,17 +370,13 @@ $(document).ready(async function () {
 			description:
 				category_name === 'appointment' ? undefined : $('#description').val() || undefined,
 			name:
-				category_name === 'product'
-					? $('#product-name').val() || undefined
-					: category_name === 'service'
-					? $('#service-name').val() || undefined
+				category_name === 'product' || category_name === 'service'
+					? $('#item-name').val() || undefined
 					: undefined,
 			pricing_model: $('input[name="pricing-model"]:checked').val() || undefined,
 			price:
-				category_name === 'product'
-					? $('#product-price').val() || undefined
-					: category_name === 'service'
-					? $('#service-price').val() || undefined
+				category_name === 'product' || category_name === 'service'
+					? $('#item-price').val() || undefined
 					: undefined,
 			currency: 'BRL',
 		};
