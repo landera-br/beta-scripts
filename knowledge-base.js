@@ -41,6 +41,8 @@ function activateDocButtons(docs, activity_descriptions) {
 				// Populate product/service data
 				$('#item-name').val(doc.name);
 				$('#item-price').val(doc.price);
+				$(`input[name="pricing-model"][value="${doc.pricing_model}"]`).prop('checked', true);
+				$(`input[name="category"][value="${doc.category.name}"]`).prop('checked', true);
 				break;
 			case 'other':
 				$('#activity_descriptions-select').fadeIn();
@@ -324,7 +326,7 @@ $(document).ready(async function () {
 
 		switch (docs_list_id) {
 			case 'products-services':
-				if ($('input[name="item-category"]:checked').val() === 'product') {
+				if ($('input[name="category"]:checked').val() === 'product') {
 					category_name = 'product';
 				} else {
 					category_name = 'service';
