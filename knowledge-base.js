@@ -103,16 +103,11 @@ function resetDocs(
 
 	let filtered_docs = docs.map((doc, index) => ({ ...doc, index }));
 
-	// Filter products
+	// Filter products and services
 	if (docs_list_id === 'products-services') {
 		filtered_docs = filtered_docs.filter(
 			(doc) => doc?.category?.name === 'product' || doc?.category?.name === 'service'
 		);
-	}
-
-	// Filter services
-	if (docs_list_id === 'services') {
-		filtered_docs = filtered_docs.filter((doc) => doc?.category?.name === 'service');
 	}
 
 	// Filter others
@@ -264,8 +259,9 @@ $(document).ready(async function () {
 
 		// Populate activity_descriptions
 		$('.list:first').empty();
-		if ($('.tab-link.w--current').attr('id') === 'services') {
+		if ($('.tab-link.w--current').attr('id') === 'products-services') {
 			$('#single').prop('checked', true);
+			$('#product').prop('checked', true);
 		}
 
 		// Get selected tab
