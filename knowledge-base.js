@@ -29,10 +29,9 @@ function activateDocButtons(docs, activity_descriptions) {
 		$('#dashboard-placeholder').hide();
 		$('#doc-form-wrapper').fadeIn();
 
-		console.log(doc.category.name);
-
 		switch (doc.category.name) {
-			case 'product' || 'service':
+			case 'product':
+			case 'service':
 				$('#dashboard-heading').text('Editar produto/serviço');
 				$('#activity_descriptions-select').hide();
 
