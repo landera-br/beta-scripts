@@ -426,14 +426,14 @@ $(document).ready(async function () {
 			if (!response.ok) {
 				throw new Error('Network response was not ok');
 			} else {
-				$('#delete-button').text('Deletar');
+				$('#delete-button').text('Excluir');
 				docs = await response.json();
 				resetDocs(docs, activity_descriptions);
 			}
 		} catch (error) {
 			if (alert('Desculpe, houve um erro ao deletar o documento. Tente novamente mais tarde.')) {
 				location.reload();
-				$('#delete-button').text('Deletar documento');
+				$('#delete-button').text('Excluir');
 			}
 		}
 	});
