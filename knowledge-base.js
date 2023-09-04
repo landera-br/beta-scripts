@@ -412,7 +412,7 @@ $(document).ready(async function () {
 			index = parseInt(index);
 		}
 
-		$('#delete-button').text('Deletando...');
+		$('#delete-button').text('Excluindo...');
 
 		try {
 			response = await fetch(`${BACKEND_URL}/docs?org_id=${org_id}&unit_id=${unit_id}`, {
