@@ -8,9 +8,8 @@
 		}
 
 		try {
-			user = await fetch(`https://beta-backend-7ikj4ovbfa-uc.a.run.app/api/v1/users`, {
+			user = await fetchRefresh(`https://beta-backend-7ikj4ovbfa-uc.a.run.app/api/v1/users`, {
 				method: 'GET',
-				headers: { Authorization: `Bearer ${Cookies.get('fb_token')}` },
 			});
 
 			if (user.status == 200) {
@@ -79,7 +78,6 @@
 	const org_id = urlParams.get('org_id');
 
 	// Add event listener to the confirm button
-	var fb_token = Cookies.get('fb_token');
 	var fb_uid = Cookies.get('fb_uid');
 	var confirmation_button = $('#confirmation-button');
 	var form = $('#create-org-form');
@@ -105,12 +103,11 @@
 		}
 
 		try {
-			response = await fetch(`https://beta-backend-7ikj4ovbfa-uc.a.run.app/api/v1/units`, {
+			response = await fetchRefresh(`https://beta-backend-7ikj4ovbfa-uc.a.run.app/api/v1/units`, {
 				method: 'POST',
 				headers: {
 					Accept: 'application/json',
 					'Content-Type': 'application/json',
-					Authorization: `Bearer ${fb_token}`,
 				},
 				body: JSON.stringify(payload),
 			});

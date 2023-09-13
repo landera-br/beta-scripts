@@ -1,155 +1,149 @@
 <script>
-  // Initialize form
-  $(document).ready(async function () {
-    // Add event listener to the confirm button
-    let fb_token = Cookies.get('fb_token');
+	// Initialize form
+	$(document).ready(async function () {
+		// Add event listener to the confirm button
+		let org = {};
 
-    let org = {};
+		const urlParams = new URLSearchParams(window.location.search);
+		const org_id = urlParams.get('org_id');
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const org_id = urlParams.get('org_id');
+		// Get org data
+		try {
+			let response = await fetchRefresh(
+				`https://beta-backend-7ikj4ovbfa-uc.a.run.app/api/v1/orgs/${org_id}`,
+				{
+					method: 'GET',
+				}
+			);
 
-    // Get org data
-    try {
-      let response = await fetch(
-        `https://beta-backend-7ikj4ovbfa-uc.a.run.app/api/v1/orgs/${org_id}`,
-        {
-          method: 'GET',
-          headers: { Authorization: `Bearer ${fb_token}` },
-        }
-      );
+			if (response.status == 200) {
+				org = await response.json();
 
-      if (response.status == 200) {
-        org = await response.json();
+				if (!org) throw new Error();
+			} else {
+				throw new Error();
+			}
+		} catch (error) {
+			alert('Ocorreu um erro ao carregar os dados da organização.');
+			window.location.href = '/my-business';
+		}
 
-        if (!org) throw new Error();
-      } else {
-        throw new Error();
-      }
-    } catch (error) {
-      alert('Ocorreu um erro ao carregar os dados da organização.');
-      window.location.href = '/my-business';
-    }
+		// Populate form
+		first_name = org.names.shift();
+		$('#name').val(first_name);
+		org.names.forEach((name) => {
+			$('#add-name').before(
+				`<div class="input-addon-field"><input type="text" class="input-field addon w-input names" maxlength="256" name="Name" data-name="Name" value="${name}"><img src="https://uploads-ssl.webflow.com/64773d761bc76753239357f0/64a7f9e83b57d3e024ec85ea_x-mark.svg" loading="lazy" alt="" class="delete-field-icon"></div>`
+			);
+		});
 
-    // Populate form
-    first_name = org.names.shift();
-    $('#name').val(first_name);
-    org.names.forEach((name) => {
-      $('#add-name').before(
-        `<div class="input-addon-field"><input type="text" class="input-field addon w-input names" maxlength="256" name="Name" data-name="Name" value="${name}"><img src="https://uploads-ssl.webflow.com/64773d761bc76753239357f0/64a7f9e83b57d3e024ec85ea_x-mark.svg" loading="lazy" alt="" class="delete-field-icon"></div>`
-      );
-    });
+		$('#description').val(org.description);
 
-    $('#description').val(org.description);
+		// Fade in page
+		$('#container').css('display', 'flex').hide().fadeIn();
 
-    // Fade in page
-    $('#container').css('display', 'flex').hide().fadeIn();
+		$('.delete-field-icon').click(function () {
+			$(this).parent().remove();
+		});
 
-    $('.delete-field-icon').click(function () {
-      $(this).parent().remove();
-    });
-
-    // Hide loading section and show form
-    $('#loading-section').hide();
-    $('#container').fadeIn();
-  });
+		// Hide loading section and show form
+		$('#loading-section').hide();
+		$('#container').fadeIn();
+	});
 </script>
 <script>
-  // Handle dynamic input fields
-  $('#add-name').click(function () {
-    // Add input above the link
-    $('#add-name').before(
-      '<div class="input-addon-field"><input type="text" class="input-field addon w-input names" maxlength="256" name="Name" data-name="Name" placeholder="Empresa XYZ"><img src="https://uploads-ssl.webflow.com/64773d761bc76753239357f0/64a7f9e83b57d3e024ec85ea_x-mark.svg" loading="lazy" alt="" class="delete-field-icon"></div>'
-    );
+	// Handle dynamic input fields
+	$('#add-name').click(function () {
+		// Add input above the link
+		$('#add-name').before(
+			'<div class="input-addon-field"><input type="text" class="input-field addon w-input names" maxlength="256" name="Name" data-name="Name" placeholder="Empresa XYZ"><img src="https://uploads-ssl.webflow.com/64773d761bc76753239357f0/64a7f9e83b57d3e024ec85ea_x-mark.svg" loading="lazy" alt="" class="delete-field-icon"></div>'
+		);
 
-    // Delete `.delete-field-icon` event listener
-    $('.delete-field-icon').off('click');
+		// Delete `.delete-field-icon` event listener
+		$('.delete-field-icon').off('click');
 
-    $('.delete-field-icon').click(function () {
-      $(this).parent().remove();
-    });
-  });
+		$('.delete-field-icon').click(function () {
+			$(this).parent().remove();
+		});
+	});
 </script>
 <script>
-  // Handle form submission
-  // Get org_id from URL
-  const urlParams = new URLSearchParams(window.location.search);
-  const org_id = urlParams.get('org_id');
+	// Handle form submission
+	// Get org_id from URL
+	const urlParams = new URLSearchParams(window.location.search);
+	const org_id = urlParams.get('org_id');
 
-  // Handle org deletion
-  let confirm_delete_button = $('#confirm-delete-button');
-  let delete_button = $('#delete-button');
-  let fb_token = Cookies.get('fb_token');
+	// Handle org deletion
+	let confirm_delete_button = $('#confirm-delete-button');
+	let delete_button = $('#delete-button');
 
-  confirm_delete_button.click(async function (event) {
-    event.preventDefault();
-    delete_button.text('Deletando...');
+	confirm_delete_button.click(async function (event) {
+		event.preventDefault();
+		delete_button.text('Deletando...');
 
-    try {
-      let response = await fetch(
-        `https://beta-backend-7ikj4ovbfa-uc.a.run.app/api/v1/orgs/${org_id}`,
-        {
-          method: 'DELETE',
-          headers: { Authorization: `Bearer ${fb_token}` },
-        }
-      );
-      if (response.status == 204) {
-        window.location.href = '/my-business';
-      } else {
-        throw new Error();
-      }
-    } catch (error) {
-      alert(
-        'Ocorreu um erro ao deletar organização. Tente novamente mais tarde ou entre em contato através do e-mail contato@betachats.com.'
-      );
-      delete_button.val('Deletar');
-      return;
-    }
-    return;
-  });
+		try {
+			let response = await fetchRefresh(
+				`https://beta-backend-7ikj4ovbfa-uc.a.run.app/api/v1/orgs/${org_id}`,
+				{
+					method: 'DELETE',
+				}
+			);
+			if (response.status == 204) {
+				window.location.href = '/my-business';
+			} else {
+				throw new Error();
+			}
+		} catch (error) {
+			alert(
+				'Ocorreu um erro ao deletar organização. Tente novamente mais tarde ou entre em contato através do e-mail contato@betachats.com.'
+			);
+			delete_button.val('Deletar');
+			return;
+		}
+		return;
+	});
 
-  // Handle form submission
-  let confirmation_button = $('#confirmation-button');
+	// Handle form submission
+	let confirmation_button = $('#confirmation-button');
 
-  confirmation_button.click(async function (event) {
-    event.preventDefault();
-    confirmation_button.val('Salvando...');
-    confirmation_button.attr('disabled', true);
+	confirmation_button.click(async function (event) {
+		event.preventDefault();
+		confirmation_button.val('Salvando...');
+		confirmation_button.attr('disabled', true);
 
-    let names = $('.names')
-      .map(function () {
-        return $(this).val();
-      })
-      .get();
+		let names = $('.names')
+			.map(function () {
+				return $(this).val();
+			})
+			.get();
 
-    const payload = { names, description: $('#description').val() };
+		const payload = { names, description: $('#description').val() };
 
-    try {
-      let response = await fetch(
-        `https://beta-backend-7ikj4ovbfa-uc.a.run.app/api/v1/orgs/${org_id}`,
-        {
-          method: 'PATCH',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${fb_token}`,
-          },
-          body: JSON.stringify(payload),
-        }
-      );
+		try {
+			let response = await fetchRefresh(
+				`https://beta-backend-7ikj4ovbfa-uc.a.run.app/api/v1/orgs/${org_id}`,
+				{
+					method: 'PATCH',
+					headers: {
+						Accept: 'application/json',
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify(payload),
+				}
+			);
 
-      if (response.status == 200) {
-        window.location.href = '/my-business';
-      } else {
-        throw new Error();
-      }
-    } catch (error) {
-      alert(
-        'Ocorreu um erro ao atualizar organização. Revise os dados do formulário ou tente novamente mais tarde.'
-      );
-      confirmation_button.val('Salvar alterações');
-      confirmation_button.attr('disabled', false);
-      return;
-    }
-  });
+			if (response.status == 200) {
+				window.location.href = '/my-business';
+			} else {
+				throw new Error();
+			}
+		} catch (error) {
+			alert(
+				'Ocorreu um erro ao atualizar organização. Revise os dados do formulário ou tente novamente mais tarde.'
+			);
+			confirmation_button.val('Salvar alterações');
+			confirmation_button.attr('disabled', false);
+			return;
+		}
+	});
 </script>

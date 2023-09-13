@@ -4,8 +4,6 @@
 
 	$(document).ready(async function () {
 		// Add event listener to the confirm button
-		let fb_token = Cookies.get('fb_token');
-
 		let unit = [];
 
 		const urlParams = new URLSearchParams(window.location.search);
@@ -14,14 +12,13 @@
 
 		// Get unit data
 		try {
-			let response = await fetch(
+			let response = await fetchRefresh(
 				`https://beta-backend-7ikj4ovbfa-uc.a.run.app/api/v1/units?org_id=${org_id}&unit_id=${unit_id}`,
 				{
 					method: 'GET',
 					headers: {
 						Accept: 'application/json',
 						'Content-Type': 'application/json',
-						Authorization: `Bearer ${fb_token}`,
 					},
 				}
 			);
@@ -141,18 +138,16 @@
 	// Handle org deletion
 	let confirm_delete_button = $('#confirm-delete-button');
 	let delete_button = $('#delete-button');
-	let fb_token = Cookies.get('fb_token');
 
 	confirm_delete_button.click(async function (event) {
 		event.preventDefault();
 		delete_button.text('Deletando...');
 
 		try {
-			let response = await fetch(
+			let response = await fetchRefresh(
 				`https://beta-backend-7ikj4ovbfa-uc.a.run.app/api/v1/units?org_id=${org_id}&unit_id=${unit_id}`,
 				{
 					method: 'DELETE',
-					headers: { Authorization: `Bearer ${fb_token}` },
 				}
 			);
 			if (response.status == 204) {
@@ -197,15 +192,17 @@
 		if (status !== initial_status) payload.status = status;
 
 		try {
-			let response = await fetch('https://beta-backend-7ikj4ovbfa-uc.a.run.app/api/v1/units', {
-				method: 'PATCH',
-				headers: {
-					Accept: 'application/json',
-					'Content-Type': 'application/json',
-					Authorization: `Bearer ${fb_token}`,
-				},
-				body: JSON.stringify(payload),
-			});
+			let response = await fetchRefresh(
+				'https://beta-backend-7ikj4ovbfa-uc.a.run.app/api/v1/units',
+				{
+					method: 'PATCH',
+					headers: {
+						Accept: 'application/json',
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify(payload),
+				}
+			);
 
 			if (response.status == 200) {
 				window.location.href = '/my-business';

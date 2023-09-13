@@ -169,16 +169,14 @@ $(document).ready(async function () {
 	const urlParams = new URLSearchParams(window.location.search);
 	const unit_id = urlParams.get('unit_id');
 	const org_id = urlParams.get('org_id');
-	const fb_token = Cookies.get('fb_token');
 	let response;
 	let org;
 	let activity_descriptions;
 
 	// Get org data
 	try {
-		response = await fetch(`${BACKEND_URL}/docs?org_id=${org_id}&unit_id=${unit_id}`, {
+		response = await fetchRefresh(`${BACKEND_URL}/docs?org_id=${org_id}&unit_id=${unit_id}`, {
 			method: 'GET',
-			headers: { Authorization: `Bearer ${fb_token}` },
 		});
 		if (!response.ok) throw new Error('Unable to fetch data');
 		org = await response.json();
@@ -190,11 +188,10 @@ $(document).ready(async function () {
 
 	// Get activities by ID
 	try {
-		response = await fetch(
+		response = await fetchRefresh(
 			`${BACKEND_URL}/industries?industry_id=${org.industry.toString()}&activity_id=${org.activity.toString()}`,
 			{
 				method: 'GET',
-				headers: { Authorization: `Bearer ${fb_token}` },
 			}
 		);
 		if (!response.ok) throw new Error('Unable to fetch data');
@@ -381,11 +378,10 @@ $(document).ready(async function () {
 		};
 
 		try {
-			response = await fetch(`${BACKEND_URL}/docs?org_id=${org_id}&unit_id=${unit_id}`, {
+			response = await fetchRefresh(`${BACKEND_URL}/docs?org_id=${org_id}&unit_id=${unit_id}`, {
 				method: 'PUT',
 				headers: {
 					'Content-Type': 'application/json',
-					Authorization: `Bearer ${fb_token}`,
 				},
 				body: JSON.stringify(new_doc),
 			});
@@ -415,11 +411,10 @@ $(document).ready(async function () {
 		$('#delete-button').text('Excluindo...');
 
 		try {
-			response = await fetch(`${BACKEND_URL}/docs?org_id=${org_id}&unit_id=${unit_id}`, {
+			response = await fetchRefresh(`${BACKEND_URL}/docs?org_id=${org_id}&unit_id=${unit_id}`, {
 				method: 'DELETE',
 				headers: {
 					'Content-Type': 'application/json',
-					Authorization: `Bearer ${fb_token}`,
 				},
 				body: JSON.stringify({ index }),
 			});

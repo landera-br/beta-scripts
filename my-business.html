@@ -1,125 +1,123 @@
 <!-- Post-checkout handler -->
 <script>
-  let user = null;
-  $(document).ready(async function () {
-    // Check if the URL contains a checkout session ID
-    const fb_uid = Cookies.get('fb_uid');
-    const fb_token = Cookies.get('fb_token');
-    const urlParams = new URLSearchParams(window.location.search);
-    const checkoutSessionId = urlParams.get('session_id')
-      ? urlParams.get('session_id')
-      : Cookies.get('session_id');
+	let user = null;
+	$(document).ready(async function () {
+		// Check if the URL contains a checkout session ID
+		const fb_uid = Cookies.get('fb_uid');
+		const urlParams = new URLSearchParams(window.location.search);
+		const checkoutSessionId = urlParams.get('session_id')
+			? urlParams.get('session_id')
+			: Cookies.get('session_id');
 
-    if (fb_uid) {
-      if (checkoutSessionId) {
-        try {
-          let response = await fetch(
-            `https://beta-backend-7ikj4ovbfa-uc.a.run.app/api/v1/stripe/${checkoutSessionId}`,
-            {
-              method: 'GET',
-              headers: { Authorization: `Bearer ${fb_token}` },
-            }
-          );
+		if (fb_uid) {
+			if (checkoutSessionId) {
+				try {
+					let response = await fetchRefresh(
+						`https://beta-backend-7ikj4ovbfa-uc.a.run.app/api/v1/stripe/${checkoutSessionId}`,
+						{
+							method: 'GET',
+						}
+					);
 
-          if (response.status !== 200) {
-            throw new Error('Unable to validate checkout session');
-          }
+					if (response.status !== 200) {
+						throw new Error('Unable to validate checkout session');
+					}
 
-          if (response.status === 409) {
-            Cookies.remove('session_id');
-            alert(
-              'Você já utilizou o período de teste gratuito. Faça upgrade do seu plano para continuar.'
-            );
+					if (response.status === 409) {
+						Cookies.remove('session_id');
+						alert(
+							'Você já utilizou o período de teste gratuito. Faça upgrade do seu plano para continuar.'
+						);
 
-            window.location.href =
-              'https://billing.stripe.com/p/login/bIYcNi8zAd3mbrGcMM?locale=pt-BR';
+						window.location.href =
+							'https://billing.stripe.com/p/login/bIYcNi8zAd3mbrGcMM?locale=pt-BR';
 
-            return;
-          }
+						return;
+					}
 
-          user = await response.json();
+					user = await response.json();
 
-          Cookies.remove('session_id');
+					Cookies.remove('session_id');
 
-          // Update the active units and subscriptions counters
-          $('#active_units').text(user.active_units);
-          $('#active_subscriptions').text(user.subscription.quantity);
-        } catch (error) {
-          console.log('Unable to validate checkout session');
-        }
-      }
-    } else {
-      if (checkoutSessionId) {
-        Cookies.set('session_id', checkoutSessionId);
-        window.location.href = '/sign-in';
-      } else {
-        window.location.href = window.location.origin + '/#plans';
-      }
-    }
-  });
+					// Update the active units and subscriptions counters
+					$('#active_units').text(user.active_units);
+					$('#active_subscriptions').text(user.subscription.quantity);
+				} catch (error) {
+					console.log('Unable to validate checkout session');
+				}
+			}
+		} else {
+			if (checkoutSessionId) {
+				Cookies.set('session_id', checkoutSessionId);
+				window.location.href = '/sign-in';
+			} else {
+				window.location.href = window.location.origin + '/#plans';
+			}
+		}
+	});
 </script>
 <script>
-  // Get data to display or redirect
-  $(document).ready(async function () {
-    fb_token = Cookies.get('fb_token');
+	// Get data to display or redirect
+	$(document).ready(async function () {
+		fb_token = Cookies.get('fb_token');
 
-    $('#loading-section').fadeIn();
-    $('#data-section').hide();
+		$('#loading-section').fadeIn();
+		$('#data-section').hide();
 
-    if (!Cookies.get('fb_token') || !Cookies.get('fb_uid')) {
-      window.location.href = '/';
-    }
+		if (!Cookies.get('fb_token') || !Cookies.get('fb_uid')) {
+			window.location.href = '/';
+		}
 
-    if (!user) {
-      try {
-        user = await fetch(`https://beta-backend-7ikj4ovbfa-uc.a.run.app/api/v1/users`, {
-          method: 'GET',
-          headers: { Authorization: `Bearer ${Cookies.get('fb_token')}` },
-        });
+		if (!user) {
+			try {
+				user = await fetchRefresh(`https://beta-backend-7ikj4ovbfa-uc.a.run.app/api/v1/users`, {
+					method: 'GET',
+				});
 
-        if (user.status == 200) {
-          user = await user.json();
-        } else {
-          throw new Error();
-        }
-      } catch (error) {
-        window.location.href = '/';
-      }
-    }
+				if (user.status == 200) {
+					user = await user.json();
+				} else {
+					throw new Error();
+				}
+			} catch (error) {
+				window.location.href = '/';
+				return;
+			}
+		}
 
-    try {
-      response = await fetch(`https://beta-backend-7ikj4ovbfa-uc.a.run.app/api/v1/orgs`, {
-        method: 'GET',
-        headers: { Authorization: `Bearer ${fb_token}` },
-      });
-    } catch (error) {
-      window.location.replace('/');
-    }
+		try {
+			response = await fetchRefresh(`https://beta-backend-7ikj4ovbfa-uc.a.run.app/api/v1/orgs`, {
+				method: 'GET',
+			});
+		} catch (error) {
+			window.location.replace('/');
+			return;
+		}
 
-    if (response.status == 200) {
-      data = await response.json();
+		if (response.status == 200) {
+			data = await response.json();
 
-      if (data?.orgs?.length < 1) {
-        $('#loading-section').hide();
-        $('#new-user-section').css('display', 'flex').hide().fadeIn();
-      } else {
-        groupsData = data.orgs;
+			if (data?.orgs?.length < 1) {
+				$('#loading-section').hide();
+				$('#new-user-section').css('display', 'flex').hide().fadeIn();
+			} else {
+				groupsData = data.orgs;
 
-        let contentWrap = $('.content-wrap');
+				let contentWrap = $('.content-wrap');
 
-        // Loop through the groupsData array and create HTML for each group
-        for (var i = 0; i < groupsData.length; i++) {
-          let group = groupsData[i];
+				// Loop through the groupsData array and create HTML for each group
+				for (var i = 0; i < groupsData.length; i++) {
+					let group = groupsData[i];
 
-          // Create the HTML for the group
-          let groupHtml = `
+					// Create the HTML for the group
+					let groupHtml = `
             <div class="group">
               <div class="group-hero">
                 <div class="group-hero_l">
                   <div class="group-hero_text">${group.names[0]}</div>
                   <a href="/org?org_id=${
-                    group._id
-                  }" class="w-inline-block"><img src="https://uploads-ssl.webflow.com/64773d761bc76753239357f0/64a560b98d20e90607dc8b50_settings.svg" loading="lazy" alt="Settings" class="header-icon"></a>
+										group._id
+									}" class="w-inline-block"><img src="https://uploads-ssl.webflow.com/64773d761bc76753239357f0/64a560b98d20e90607dc8b50_settings.svg" loading="lazy" alt="Settings" class="header-icon"></a>
                 </div>
                 <div class="magistral"></div>
                 <img src="https://uploads-ssl.webflow.com/64773d761bc76753239357f0/64a55f0267ffbab04cdc2dda_eye.svg" loading="lazy" alt="" class="header-icon eye-open">
@@ -127,110 +125,111 @@
               </div>
               <div class="scroll">
                 ${group.units_data
-                  .map(
-                    (unit) => `
+									.map(
+										(unit) => `
                     <div class="group-row">
                       <a href="/edit-unit?org_id=${group._id}&unit_id=${
-                      unit._id
-                    }" class="row-left w-inline-block">
+											unit._id
+										}" class="row-left w-inline-block">
                         <img src="${
-                          unit?.status === 'active'
-                            ? 'https://uploads-ssl.webflow.com/64773d761bc76753239357f0/64a2dadb8b12e7dccaee8472_check-circle.svg'
-                            : 'https://uploads-ssl.webflow.com/64773d761bc76753239357f0/64d6138d19ce4f24c32092ba_warning-white.svg'
-                        }" loading="eager" alt="" class="header-icon">
+													unit?.status === 'active'
+														? 'https://uploads-ssl.webflow.com/64773d761bc76753239357f0/64a2dadb8b12e7dccaee8472_check-circle.svg'
+														: 'https://uploads-ssl.webflow.com/64773d761bc76753239357f0/64d6138d19ce4f24c32092ba_warning-white.svg'
+												}" loading="eager" alt="" class="header-icon">
                         <div class="row-h truncate">${
-                          unit?.address ? unit.address : 'Estabelecimento'
-                        }</div>
+													unit?.address ? unit.address : 'Estabelecimento'
+												}</div>
                       </a>
                       <div class="row-right">
                         <a href="/edit-unit?org_id=${group._id}&unit_id=${
-                      unit._id
-                    }" class="doc-link w-inline-block">
+											unit._id
+										}" class="doc-link w-inline-block">
                           <div class="doc-button-text">Editar unidade</div>
                         </a>
                         <a href="/docs?org_id=${group._id}&unit_id=${
-                      unit._id
-                    }" class="doc-link w-inline-block">
+											unit._id
+										}" class="doc-link w-inline-block">
                           <div class="doc-button-text">Configurar assistente</div>
                         </a>
                       </div>
                     </div>
                     `
-                  )
-                  .join('')}
+									)
+									.join('')}
                   ${
-                    group.units_data.length < 1
-                      ? '<div class="no-units">Nenhuma unidade cadastrada</div>'
-                      : ''
-                  }
+										group.units_data.length < 1
+											? '<div class="no-units">Nenhuma unidade cadastrada</div>'
+											: ''
+									}
                   <div class="link add-unit w-inline-block" id="${
-                    group._id
-                  }">Adicionar unidade (<span id="active_units">${
-            user.active_units ? user.active_units : '0'
-          }</span>/<span id="active_subscriptions">${
-            user.subscription.quantity ? user.subscription.quantity : '0'
-          }</span>)</div>
+										group._id
+									}">Adicionar unidade (<span id="active_units">${
+						user.active_units ? user.active_units : '0'
+					}</span>/<span id="active_subscriptions">${
+						user.subscription.quantity ? user.subscription.quantity : '0'
+					}</span>)</div>
               </div>
             </div>
         `;
 
-          // Append the group HTML to the contentWrap
-          contentWrap.append(groupHtml);
+					// Append the group HTML to the contentWrap
+					contentWrap.append(groupHtml);
 
-          // Click event to add-unit button
-          $(`#${group._id}`).click(function () {
-            if (user.active_units >= user.subscription.quantity) {
-              if (user.subscription.quantity == 0) {
-                alert(
-                  'Você não possui nenhum plano ativo. Faça upgrade para adicionar mais unidades.'
-                );
-              } else {
-                alert(
-                  'Você atingiu o limite de unidades para o seu plano. Faça upgrade para adicionar mais unidades.'
-                );
-              }
+					// Click event to add-unit button
+					$(`#${group._id}`).click(function () {
+						if (user.active_units >= user.subscription.quantity) {
+							if (user.subscription.quantity == 0) {
+								alert(
+									'Você não possui nenhum plano ativo. Faça upgrade para adicionar mais unidades.'
+								);
+							} else {
+								alert(
+									'Você atingiu o limite de unidades para o seu plano. Faça upgrade para adicionar mais unidades.'
+								);
+							}
 
-              if (user.subscription.has_trial) {
-                window.location.href = window.location.origin + '/#plans';
-              } else {
-                window.location.href =
-                  'https://billing.stripe.com/p/login/bIYcNi8zAd3mbrGcMM?locale=pt-BR';
-              }
-            } else {
-              window.location.href = `/new-unit?org_id=${group._id}`;
-            }
-          });
-        }
+							if (user.subscription.has_trial) {
+								window.location.href = window.location.origin + '/#plans';
+							} else {
+								window.location.href =
+									'https://billing.stripe.com/p/login/bIYcNi8zAd3mbrGcMM?locale=pt-BR';
+							}
+						} else {
+							window.location.href = `/new-unit?org_id=${group._id}`;
+						}
+					});
+				}
 
-        $('#loading-section').hide();
-        $('#data-section').fadeIn();
+				$('#loading-section').hide();
+				$('#data-section').fadeIn();
 
-        // Find all eye icons with class eye-open
-        $('.eye-open').click(function () {
-          // Get the parent .group element
-          let group = $(this).closest('.group');
-          // Find the .scroll element within the same .group and hide it
-          group.find('.scroll').hide();
-          // Show the .magistral elements and toggle icons
-          group.find('.magistral').show();
-          $(this).hide();
-          group.find('.eye-close').show();
-        });
+				// Find all eye icons with class eye-open
+				$('.eye-open').click(function () {
+					// Get the parent .group element
+					let group = $(this).closest('.group');
+					// Find the .scroll element within the same .group and hide it
+					group.find('.scroll').hide();
+					// Show the .magistral elements and toggle icons
+					group.find('.magistral').show();
+					$(this).hide();
+					group.find('.eye-close').show();
+				});
 
-        // Find all eye icons with class eye-close
-        $('.eye-close').click(function () {
-          // Get the parent .group element
-          let group = $(this).closest('.group');
-          // Find the .scroll element within the same .group and show it
-          group.find('.scroll').show();
-          // Hide the .magistral elements and toggle icons
-          group.find('.magistral').hide();
-          $(this).hide();
-          group.find('.eye-open').show();
-        });
-      }
-    } else {
-      window.location.replace('/');
-    }
-  });
+				// Find all eye icons with class eye-close
+				$('.eye-close').click(function () {
+					// Get the parent .group element
+					let group = $(this).closest('.group');
+					// Find the .scroll element within the same .group and show it
+					group.find('.scroll').show();
+					// Hide the .magistral elements and toggle icons
+					group.find('.magistral').hide();
+					$(this).hide();
+					group.find('.eye-open').show();
+				});
+			}
+		} else {
+			window.location.replace('/');
+			return;
+		}
+	});
 </script>
