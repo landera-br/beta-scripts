@@ -46,6 +46,7 @@
 		}
 
 		$('#address').val(unit.address);
+		$('#link').val(unit.link);
 
 		// Check in unit.regions array if there is any region with a name
 		if (unit.regions.some((region) => region.name)) {
@@ -184,9 +185,11 @@
 				})
 				.get();
 
-			payload = { org_id, unit_id, address, regions, region_mode: 'manual' };
+			link = $('#link').val();
+
+			payload = { org_id, unit_id, address, link, regions, region_mode: 'manual' };
 		} else {
-			payload = { org_id, unit_id, address, region_mode: 'automatic' };
+			payload = { org_id, unit_id, address, link, region_mode: 'automatic' };
 		}
 
 		if (status !== initial_status) payload.status = status;

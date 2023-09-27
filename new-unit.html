@@ -88,6 +88,7 @@
 		confirmation_button.attr('disabled', true);
 
 		let address = $('#address').val();
+		let link = $('#link').val();
 		let payload = {};
 
 		if ($('#radio-manual-region').is(':checked')) {
@@ -97,9 +98,9 @@
 				})
 				.get();
 
-			payload = { org_id, address, regions, region_mode: 'manual' };
+			payload = { org_id, address, link, regions, region_mode: 'manual' };
 		} else {
-			payload = { org_id, address, region_mode: 'automatic' };
+			payload = { org_id, address, link, region_mode: 'automatic' };
 		}
 
 		try {

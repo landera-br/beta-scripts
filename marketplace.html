@@ -1,247 +1,12 @@
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-<script>
-	function initMap(lat = -23.543228744218986, lng = -46.64185219146712) {
-		// Custom map style
-		var customMapStyle = [
-			{
-				elementType: 'geometry',
-				stylers: [
-					{
-						color: '#36475c',
-					},
-				],
-			},
-			{
-				elementType: 'labels.text.fill',
-				stylers: [
-					{
-						color: '#ffffff',
-					},
-				],
-			},
-			{
-				elementType: 'labels.text.stroke',
-				stylers: [
-					{
-						color: '#000000',
-					},
-					{
-						weight: 1,
-					},
-				],
-			},
-			{
-				featureType: 'administrative.locality',
-				elementType: 'labels.text.fill',
-				stylers: [
-					{
-						color: '#e1e1e1',
-					},
-				],
-			},
-			{
-				featureType: 'road',
-				elementType: 'geometry',
-				stylers: [
-					{
-						color: '#2e394b',
-					},
-				],
-			},
-			{
-				featureType: 'road',
-				elementType: 'geometry.stroke',
-				stylers: [
-					{
-						color: '#212a37',
-					},
-				],
-			},
-			{
-				featureType: 'road',
-				elementType: 'labels.text.fill',
-				stylers: [
-					{
-						color: '#ffffff', // Improved road labels text fill color
-					},
-				],
-			},
-			{
-				featureType: 'road.arterial', // Target road arterials (avenues)
-				elementType: 'geometry',
-				stylers: [
-					{
-						color: '#485a6f', // A color between normal streets and highways
-					},
-				],
-			},
-			{
-				featureType: 'road.arterial', // Target road arterials (avenues)
-				elementType: 'labels.text.fill',
-				stylers: [
-					{
-						color: '#ffffff', // Text fill color for avenues
-					},
-				],
-			},
-			{
-				featureType: 'road.highway',
-				elementType: 'geometry',
-				stylers: [
-					{
-						color: '#717c9f',
-					},
-				],
-			},
-			{
-				featureType: 'road.highway',
-				elementType: 'geometry.stroke',
-				stylers: [
-					{
-						color: '#1f2835',
-					},
-				],
-			},
-			{
-				featureType: 'road.highway',
-				elementType: 'labels.text.fill',
-				stylers: [
-					{
-						color: '#ffffff', // Improved highway labels text fill color
-					},
-				],
-			},
-			{
-				featureType: 'poi',
-				elementType: 'labels',
-				stylers: [
-					{
-						visibility: 'off',
-					},
-				],
-			},
-			{
-				featureType: 'poi.park', // Target parks specifically
-				elementType: 'geometry',
-				stylers: [
-					{
-						hue: '#075E54', // Set the color to green
-					},
-				],
-			},
-			{
-				featureType: 'poi.park', // Target parks specifically
-				elementType: 'labels.icon',
-				stylers: [
-					{
-						visibility: 'on', // Show park icons
-					},
-				],
-			},
-			{
-				featureType: 'poi.park', // Target parks specifically
-				elementType: 'labels.text',
-				stylers: [
-					{
-						visibility: 'on', // Show park labels
-					},
-				],
-			},
-			{
-				featureType: 'transit',
-				elementType: 'geometry',
-				stylers: [
-					{
-						color: '#5b6b80',
-					},
-				],
-			},
-			{
-				featureType: 'transit.station',
-				elementType: 'labels.text.fill',
-				stylers: [
-					{
-						color: '#e1e1e1',
-					},
-				],
-			},
-			{
-				featureType: 'water',
-				elementType: 'geometry',
-				stylers: [
-					{
-						color: '#1e3579',
-					},
-				],
-			},
-			{
-				featureType: 'water',
-				elementType: 'labels.text.fill',
-				stylers: [
-					{
-						color: '#ffffff',
-					},
-				],
-			},
-			{
-				featureType: 'water',
-				elementType: 'labels.text.stroke',
-				stylers: [
-					{
-						color: '#000000',
-					},
-					{
-						weight: 1,
-					},
-				],
-			},
-		];
-
-		// Map options
-		var options = {
-			zoom: 15,
-			center: { lat, lng },
-			styles: customMapStyle,
-			mapTypeControl: false,
-		};
-
-		// New map
-		var map = new google.maps.Map(document.getElementById('map'), options);
-
-		// Add marker
-		var marker = new google.maps.Marker({
-			map: map,
-			icon: 'https://uploads-ssl.webflow.com/64773d761bc76753239357f0/6504650323fbdfa3e6f51a95_1.png',
-			position: { lat, lng },
-		});
-
-		$('#typing').hide();
-	}
-
-	let lat;
-	let lng;
-
-	// Check if the Geolocation API is available in the browser
-	if ('geolocation' in navigator) {
-		// Get the user's location
-		navigator.geolocation.getCurrentPosition(function (position) {
-			// Retrieve latitude and longitude
-			lat = position.coords.latitude;
-			lng = position.coords.longitude;
-
-			initMap(lat, lng);
-		});
-	} else {
-		// Geolocation is not available in this browser
-		console.log('Geolocation is not available in this browser.');
-	}
-</script>
 <!-- Load the Google Maps JS API -->
 <script
 	async
 	defer
 	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDJHQcfM6vogqPfjTxzw-5KAt_qvOcsZl4"
 ></script>
+<!-- Google Maps Functions -->
+<script src="https://cdn.jsdelivr.net/gh/landera-br/beta-scripts@v1.85/marketplace.js"></script>
 <script>
 	$(document).ready(async function () {
 		$('#message-input').attr('autocomplete', 'off');
@@ -256,83 +21,138 @@
 
 	form.submit(async function (event) {
 		event.preventDefault();
+		let response;
 		var input = $('#message-input').val();
 
 		if (input === '') return;
 
-		// Disable input
 		$('#message-input').prop('disabled', true);
 
-		// Append input to chat
 		$('#chat').append(`<div class="user-message">${input}</div>`);
 
-		// Clear input
 		$('#message-input').val('');
 
-		// Show typing indicator
 		$('#typing').show();
 
-		// Scroll chat to bottom
 		$('.chat-wrapper').scrollTop($('.chat-wrapper')[0].scrollHeight);
 
 		var messages = [];
 
-		// Iterate through child elements of #chat
 		$('#chat')
 			.children()
 			.each(function () {
 				var role = $(this).hasClass('user-message') ? 'user' : 'assistant';
 				var content = $(this).text();
 
-				// Push message to messages array
 				messages.push({ role: role, content: content });
 			});
 
-		// Make request to API
-		let response = await fetch('https://beta-ai-7ikj4ovbfa-uc.a.run.app/message', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({ input_message: input, chat_history: messages }),
-		});
+		// Remove last message from messages array
+		messages.pop();
 
-		// Wait for response
+		try {
+			response = await fetch('https://beta-ai-7ikj4ovbfa-uc.a.run.app/message', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					input_message: input,
+					chat_history: messages,
+					latitude: lat,
+					longitude: lng,
+				}),
+			});
+		} catch (error) {
+			alert('Ocorreu um erro ao enviar a mensagem. Tente novamente mais tarde.');
+
+			$('#message-input').prop('disabled', false);
+
+			$('#message-input').focus();
+
+			$('#typing').hide();
+
+			return;
+		}
+
 		response = await response;
 
-		// Check if response is ok
 		if (response.ok) {
 			// Parse response
 			response = await response.json();
 
 			// Get response message
-			var output = response.output;
+			const output = response.output;
+			const query = response.search_query;
+			const question_type = response.question_type;
+			const suggested_places_ids = response.suggested_places_ids;
+			let markersData = response.markers;
+
+			if (question_type === 'places' && query) {
+				// Add Google Places markers
+				try {
+					let response = await fetchRefresh(
+						`https://beta-backend-7ikj4ovbfa-uc.a.run.app/api/v1/places/`,
+						{
+							method: 'POST',
+							headers: {
+								Accept: 'application/json',
+								'Content-Type': 'application/json',
+							},
+							body: JSON.stringify({ query }),
+						}
+					);
+
+					if (response.status == 200) {
+						const placesResult = await response.json();
+
+						if (placesResult) {
+							// Loop through markers and add { type: 'suggested' } property
+							placesResult.forEach((place) => {
+								if (suggested_places_ids.includes(place.place_id)) {
+									place.type = 'suggested';
+								} else {
+									place.type = 'basic';
+								}
+							});
+
+							markersData = markersData.concat(placesResult);
+						}
+					} else {
+						throw new Error();
+					}
+				} catch (error) {
+					alert('Ocorreu um erro ao carregar mapa. Tente novamente mais tarde.');
+				}
+			}
+
+			if (markersData.length !== 0) {
+				// Remove duplicate markers
+				cleanedMarkersData = removeDuplicateMarkers(markersData);
+				clearMarkers();
+				await addMarkersWithTimeout(cleanedMarkersData);
+			}
+
+			// TODO Handler product question type
+			// ...
 
 			// Append response message to chat
 			$('#chat').append(`<div class="ai-message">${marked.parse(output)}</div>`);
 
-			// Scroll chat to bottom
 			$('.chat-wrapper').scrollTop($('.chat-wrapper')[0].scrollHeight);
 
-			// Enable input
 			$('#message-input').prop('disabled', false);
 
-			// Focus input
 			$('#message-input').focus();
 
-			// Hide typing indicator
 			$('#typing').hide();
 		} else {
-			// Enable input
 			$('#message-input').prop('disabled', false);
 
-			// Focus input
 			$('#message-input').focus();
 
-			// Hide typing indicator
 			$('#typing').hide();
 
-			// Alert user
 			alert('Ocorreu um erro ao enviar a mensagem. Tente novamente mais tarde.');
 		}
 	});
