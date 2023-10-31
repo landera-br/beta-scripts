@@ -6,7 +6,7 @@
 	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDJHQcfM6vogqPfjTxzw-5KAt_qvOcsZl4"
 ></script>
 <!-- Google Maps Functions -->
-<script src="https://cdn.jsdelivr.net/gh/landera-br/beta-scripts@v1.85/marketplace.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/landera-br/beta-scripts@v1.86/marketplace.js"></script>
 <script>
 	$(document).ready(async function () {
 		$('#message-input').attr('autocomplete', 'off');
@@ -89,6 +89,13 @@
 			const suggested_places_ids = response.suggested_places_ids;
 			let markersData = response.beta_pro_markers;
 
+			// Append response message to chat
+			$('#chat').append(`<div class="ai-message">${marked.parse(output)}</div>`);
+			$('.chat-wrapper').scrollTop($('.chat-wrapper')[0].scrollHeight);
+			$('#message-input').prop('disabled', false);
+			$('#message-input').focus();
+			$('#typing').hide();
+
 			if (topic === 'recommend_services' && query) {
 				// Add Google Places markers
 				try {
@@ -112,8 +119,6 @@
 							placesResult.forEach((place) => {
 								if (suggested_places_ids.includes(place.place_id)) {
 									place.type = 'suggested';
-								} else {
-									place.type = 'basic';
 								}
 							});
 
@@ -126,28 +131,18 @@
 				} catch (error) {
 					alert('Ocorreu um erro ao carregar mapa. Tente novamente mais tarde.');
 				}
+
+				if (markersData.length !== 0) {
+					// Remove duplicate markers
+					cleanedMarkersData = removeDuplicateMarkers(markersData);
+					clearMarkers();
+					await addMarkersWithTimeout(cleanedMarkersData);
+				}
 			}
 
-			if (markersData.length !== 0) {
-				// Remove duplicate markers
-				cleanedMarkersData = removeDuplicateMarkers(markersData);
-				clearMarkers();
-				await addMarkersWithTimeout(cleanedMarkersData);
+			if (topic === 'recommend_products') {
+				// TODO Handler product question type
 			}
-
-			// TODO Handler product question type
-			// ...
-
-			// Append response message to chat
-			$('#chat').append(`<div class="ai-message">${marked.parse(output)}</div>`);
-
-			$('.chat-wrapper').scrollTop($('.chat-wrapper')[0].scrollHeight);
-
-			$('#message-input').prop('disabled', false);
-
-			$('#message-input').focus();
-
-			$('#typing').hide();
 		} else {
 			$('#message-input').prop('disabled', false);
 
