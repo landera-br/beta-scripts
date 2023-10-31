@@ -252,7 +252,7 @@ async function addMarkersWithTimeout(markersData) {
 	async function addMarkerWithTimeout(markerData) {
 		const customMarkerIcon = {
 			url:
-				markerData.type === 'premium'
+				markerData.type === 'pro'
 					? 'https://uploads-ssl.webflow.com/64773d761bc76753239357f0/6512d7b753a6e28933580111_beta-marker.png'
 					: markerData.type === 'suggested'
 					? 'https://uploads-ssl.webflow.com/64773d761bc76753239357f0/6512d7b7d55191dd0668307c_suggested-marker.png'

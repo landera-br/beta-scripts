@@ -84,11 +84,12 @@
 			// Get response message
 			const output = response.output;
 			const query = response.search_query;
-			const question_type = response.question_type;
+			const coordinates = response.coordinates;
+			const topic = response.topic;
 			const suggested_places_ids = response.suggested_places_ids;
-			let markersData = response.markers;
+			let markersData = response.beta_pro_markers;
 
-			if (question_type === 'places' && query) {
+			if (topic === 'recommend_services' && query) {
 				// Add Google Places markers
 				try {
 					let response = await fetchRefresh(
@@ -99,7 +100,7 @@
 								Accept: 'application/json',
 								'Content-Type': 'application/json',
 							},
-							body: JSON.stringify({ query }),
+							body: JSON.stringify({ query, coordinates }),
 						}
 					);
 
@@ -117,6 +118,7 @@
 							});
 
 							markersData = markersData.concat(placesResult);
+							console.log(markersData);
 						}
 					} else {
 						throw new Error();
