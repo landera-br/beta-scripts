@@ -38,29 +38,17 @@
 
 		var messages = [];
 
-		$('#chat')
-			.children()
-			.each(function () {
-				var role = $(this).hasClass('user-message') ? 'user' : 'assistant';
-				var content = $(this).text();
-
-				messages.push({ role: role, content: content });
-			});
-
-		// Remove last message from messages array
-		messages.pop();
-
 		try {
-			response = await fetch('https://beta-ai-7ikj4ovbfa-uc.a.run.app/message', {
+			response = await fetch('https://beta-ai-7ikj4ovbfa-uc.a.run.app/marketplace', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
 				},
 				body: JSON.stringify({
 					input_message: input,
-					chat_history: messages,
 					latitude: lat,
 					longitude: lng,
+					session_id: Cookies.get('session_id'),
 				}),
 			});
 		} catch (error) {
@@ -83,8 +71,8 @@
 
 			// Get response message
 			const output = response.output;
-			const query = response.search_query;
-			const coordinates = response.coordinates;
+			const search_query = response.search_query;
+			const search_coordinates = response.search_coordinates;
 			const topic = response.topic;
 			const suggested_places_ids = response.suggested_places_ids;
 			let markersData = response.beta_pro_markers;
@@ -96,7 +84,11 @@
 			$('#message-input').focus();
 			$('#typing').hide();
 
-			if (topic === 'recommend_services' && query && markersData.length === 0) {
+			if (
+				(topic === 'search_services' || topic === 'search_places') &&
+				search_query &&
+				markersData.length === 0
+			) {
 				// Add Google Places markers
 				try {
 					let response = await fetchRefresh(
@@ -107,7 +99,7 @@
 								Accept: 'application/json',
 								'Content-Type': 'application/json',
 							},
-							body: JSON.stringify({ query, coordinates }),
+							body: JSON.stringify({ query: search_query, coordinates: search_coordinates }),
 						}
 					);
 
@@ -128,11 +120,12 @@
 						throw new Error();
 					}
 				} catch (error) {
+					console.log(error);
 					alert('Ocorreu um erro ao carregar mapa. Tente novamente mais tarde.');
 				}
 			}
 
-			if (topic === 'recommend_products') {
+			if (topic === 'search_products') {
 				// TODO Handler product question type
 			}
 

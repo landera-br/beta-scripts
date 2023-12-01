@@ -2,6 +2,24 @@
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
+<!-- Voiceflow widget -->
+<script type="text/javascript">
+	(function (d, t) {
+		var v = d.createElement(t),
+			s = d.getElementsByTagName(t)[0];
+		v.onload = function () {
+			window.voiceflow.chat.load({
+				verify: { projectID: '6554cf8484c90f00077953ba' },
+				url: 'https://general-runtime.voiceflow.com',
+				versionID: 'production',
+				allowDangerousHTML: true,
+			});
+		};
+		v.src = 'https://cdn.voiceflow.com/widget/bundle.mjs';
+		v.type = 'text/javascript';
+		s.parentNode.insertBefore(v, s);
+	})(document, 'script');
+</script>
 <!-- Navbar Script -->
 <script>
 	// Unhide live chat after page is loaded
@@ -26,6 +44,25 @@
 			);
 		} else {
 			window.location.href = 'https://betachats.com/#solution';
+		}
+	});
+
+	$('.partners-link').click(function (e) {
+		e.preventDefault();
+		// Check if page is home page
+		if (window.location.pathname === '/') {
+			// Scroll to element with 10% window height padding
+			var scrollPadding = $(window).height() * 0.1;
+
+			// Scroll to the element with the ID
+			$('html, body').animate(
+				{
+					scrollTop: $('#partners').offset().top - scrollPadding,
+				},
+				1000
+			);
+		} else {
+			window.location.href = 'https://betachats.com/#partners';
 		}
 	});
 
@@ -127,7 +164,7 @@
 	// Function to handle invalid token
 	function handleInvalidToken() {
 		$('#nav-placeholder').hide();
-		$('#btn-register').show();
+		// $('#btn-register').show(); // TODO - Uncomment this line when registration is enabled
 
 		if (!PUBLIC_PAGES.includes(window.location.pathname)) window.location.href = '/sign-in';
 	}
@@ -205,10 +242,11 @@
 		const token = await handleSignedUser(fb_token);
 
 		// Update headers
-		options.headers = {
-			...options.headers,
-			Authorization: `Bearer ${token}`,
-		};
+		options.headers = { ...options.headers };
+
+		if (token) {
+			options.headers.Authorization = `Bearer ${token}`;
+		}
 
 		// Make fetch call
 		return fetch(url, options);
@@ -223,4 +261,17 @@
 			handleInvalidToken();
 		}
 	});
+</script>
+<!-- Session ID -->
+<script>
+	function generateSessionID() {
+		// This function generates a unique session ID using a timestamp and a random string.
+		return new Date().getTime().toString(36) + '-' + Math.random().toString(36).substr(2, 9);
+	}
+
+	// Check if session ID exists
+	if (!Cookies.get('session_id')) {
+		// Generate a new session ID
+		Cookies.set('session_id', generateSessionID(), { secure: true });
+	}
 </script>
